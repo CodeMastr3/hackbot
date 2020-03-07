@@ -7,5 +7,37 @@ bot = commands.Bot(command_prefix='!')
 async def ping(ctx):
     await ctx.send('pong')
 
-bot.run('Njg1ODg4MjEzOTI3MTk4OTU3.XmPNaw.hoUzeROSUpW9YxvHYx1wnZYoaF8')
+@bot.command()
+async def logout(ctx):
+    await bot.logout()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+bot.run('Njg1ODkyNjI2NzI5MjcxMzk1.XmPRTw.dkOEenS7SnJK-isZBTtpM0Ny-zE')
 
