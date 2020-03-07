@@ -2,7 +2,13 @@ import discord
 import discord.utils
 #import emojiRole.py
 import token1
+from datetime import datetime
+from random import seed
+from random import randint
 from discord.ext import commands
+
+
+seed(datetime.now())
 
 bot = commands.Bot(command_prefix='!')
 
@@ -19,22 +25,20 @@ async def addMessage(ctx):
     global emojiList
     reacted_message = await ctx.send("Hi")
     
-    #emoji = '\N{THUMBS UP SIGN}'
-    #emojiList[emoji] = '685902355404947535'
     emoji = '\U0001F600'#U0001F44D'
+    print(emoji)
     emojiList[emoji] = 'test'
     
     watched_message[reacted_message.id] = emojiList
     await reacted_message.add_reaction(emoji)
 
 @bot.command()
+async def roll(ctx):
+  await ctx.send(randint(1,101))
+
+@bot.command()
 async def logout(ctx):
     await bot.logout()
-
-emojiList1['afc96e77efee1190e1fbe3cc69f149f8'] = '<@&685902355404947535>'
-emojiList1['df854ca9a022bf3b5fe42ded8725e1bc'] = '<@&685891891006275604>'
-
-watched_message['22'] = emojiList1
 
 async def manage_reactions(reaction, user, added: bool):
     if not reaction.message.id in watched_message:#self.watched_message:
