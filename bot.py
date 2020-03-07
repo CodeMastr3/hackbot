@@ -1,4 +1,7 @@
 import discord
+#import emojiRole.py
+import token1
+
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix='!')
@@ -23,6 +26,14 @@ async def addMessage(ctx):
 async def logout(ctx):
     await bot.logout()
 
+watched_message = {}
+emojiList1 = {}
+
+emojiList1['afc96e77efee1190e1fbe3cc69f149f8'] = '<@&685902355404947535>'
+emojiList1['df854ca9a022bf3b5fe42ded8725e1bc'] = '<@&685891891006275604>'
+
+watched_message['22'] = emojiList1
+
 async def manage_reaction(self, reaction, user, added: bool):
     if not reaction.message.id in self.watched_messages:
         return
@@ -30,6 +41,7 @@ async def manage_reaction(self, reaction, user, added: bool):
     messageID = reaction.message.id
     mapping = self.watched_messages[messageID]
     if not reaction.emoji in mapping:
+        # reaction.emoji is str if normal emoji or ID if custom, but we use both as keys in mapping
         return
 
     member = discord.utils.get(reaction.message.server.members, id=user.id)
@@ -48,4 +60,4 @@ async def on_reaction_add(self, reaction, user):
 async def on_reaction_remove(self, reaction, user):
     await self.manage_reactions(reaction, user, False)
 
-bot.run('Njg1ODkyNjI2NzI5MjcxMzk1.XmPRTw.dkOEenS7SnJK-isZBTtpM0Ny-zE')
+bot.run(token1.stringToken())
