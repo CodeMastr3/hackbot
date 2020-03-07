@@ -19,7 +19,7 @@ async def ping(ctx):
 
 @bot.command()
 async def addMessage(ctx):
-    reacted_message = await client.send("Hi")
+    reacted_message = await ctx.send("Hi")
     reacted_message.add_reaction(emoji)
 
 @bot.command()
