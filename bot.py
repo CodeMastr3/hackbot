@@ -60,4 +60,36 @@ async def on_reaction_add(self, reaction, user):
 async def on_reaction_remove(self, reaction, user):
     await self.manage_reactions(reaction, user, False)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 bot.run(token1.stringToken())
