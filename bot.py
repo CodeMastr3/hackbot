@@ -13,6 +13,7 @@ bot = commands.Bot(command_prefix='!')
 
 @bot.command()
 async def ping(ctx):
+    "Returns pong"
     await ctx.send('pong')
 
 messageDict = emojiRole.message
@@ -22,6 +23,7 @@ emojiList = {}
 
 @bot.command()
 async def addMessage(ctx):
+    "Adds the Role Messages"
     global messageDict
     global watched_message
     global emojiList
@@ -39,6 +41,7 @@ async def roll(ctx):
 
 @bot.command()
 async def logout(ctx):
+    "Logs the bot out"
     await bot.logout()
 
 async def manage_reactions(reaction, user, added: bool):
