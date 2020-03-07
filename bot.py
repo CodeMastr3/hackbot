@@ -7,5 +7,5 @@ bot = commands.Bot(command_prefix='!')
 async def ping(ctx):
     await ctx.send('pong')
 
-bot.run('token')
+bot.run('Njg1ODg4MjEzOTI3MTk4OTU3.XmPNaw.hoUzeROSUpW9YxvHYx1wnZYoaF8')
 
