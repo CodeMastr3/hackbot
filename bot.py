@@ -11,6 +11,12 @@ async def ping(ctx):
 async def logout(ctx):
     await bot.logout()
 
+watched_messages = {}
+emojiList1 = {}
+
+emojiList1['/SMILYFACE'] = roleID
+
+watched_message[message1ID] = emojiList1
 
 
 
@@ -39,5 +45,5 @@ async def logout(ctx):
 
 
 
-bot.run('Njg1ODkyNjI2NzI5MjcxMzk1.XmPRTw.dkOEenS7SnJK-isZBTtpM0Ny-zE')
+bot.run('Njg1ODkyNjI2NzI5MjcxMzk1.XmPSRg.UJJTAi_Cv3e48IuAgsRpU8kYjes')
 
