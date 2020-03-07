@@ -1,40 +1,35 @@
 import discord
+import discord.utils
 #import emojiRole.py
 import token1
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix='!')
 
-"""watched_messages = {
-    messageID: {
-        regularEmojiName: roleID,
-        customEmojiID: roleID
-    }
-}
-"""
 @bot.command()
 async def ping(ctx):
     await ctx.send('pong')
 
 watched_message = {}
 emojiList = {}
-emojiList1 = {}
 
 @bot.command()
 async def addMessage(ctx):
     global watched_message
     global emojiList
     reacted_message = await ctx.send("Hi")
+    
+    #emoji = '\N{THUMBS UP SIGN}'
+    #emojiList[emoji] = '685902355404947535'
     emoji = '\U0001F600'#U0001F44D'
-    print(emoji)
     emojiList[emoji] = 'test'
+    
     watched_message[reacted_message.id] = emojiList
     await reacted_message.add_reaction(emoji)
 
 @bot.command()
 async def logout(ctx):
     await bot.logout()
-
 
 emojiList1['afc96e77efee1190e1fbe3cc69f149f8'] = '<@&685902355404947535>'
 emojiList1['df854ca9a022bf3b5fe42ded8725e1bc'] = '<@&685891891006275604>'
@@ -46,7 +41,8 @@ async def manage_reactions(reaction, user, added: bool):
         return
 
     messageID = reaction.message.id
-    mapping = watched_message[messageID]#self.watched_message[messageID]
+    mapping = watched_message[messageID]
+
     if not reaction.emoji in mapping:
         # reaction.emoji is str if normal emoji or ID if custom, but we use both as keys in mapping
         return
