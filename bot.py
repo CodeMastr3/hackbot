@@ -54,7 +54,6 @@ async def manage_reactions(reaction, user, added: bool):
     member = discord.utils.get(reaction.message.guild.members, id=user.id)
 
     role = discord.utils.get(reaction.message.guild.roles, name=mapping[reaction.emoji])
-    print(mapping[reaction.emoji])
 
     if added:
         await member.add_roles(role)
