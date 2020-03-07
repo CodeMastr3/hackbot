@@ -6,21 +6,22 @@ from discord.ext import commands
 
 bot = commands.Bot(command_prefix='!')
 
-watched_messages = {
+"""watched_messages = {
     messageID: {
         regularEmojiName: roleID,
         customEmojiID: roleID
     }
 }
-
+"""
 @bot.command()
 async def ping(ctx):
     await ctx.send('pong')
 
 @bot.command()
 async def addMessage(ctx):
-    reacted_message = await client.send("Hi")
-    reacted_message.add_reaction(emoji)
+    reacted_message = await ctx.send("Hi")
+    emoji = '\N{THUMBS UP SIGN}'
+    await reacted_message.add_reaction(emoji)
 
 @bot.command()
 async def logout(ctx):
