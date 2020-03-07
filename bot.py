@@ -1,6 +1,6 @@
 import discord
 import discord.utils
-#import emojiRole.py
+import emojiRole
 import token1
 from datetime import datetime
 from random import seed
@@ -16,21 +16,29 @@ bot = commands.Bot(command_prefix='!')
 async def ping(ctx):
     await ctx.send('pong')
 
+messageDict = emojiRole.message
+
 watched_message = {}
 emojiList = {}
 
 @bot.command()
 async def addMessage(ctx):
+    global messageDict
     global watched_message
     global emojiList
-    reacted_message = await ctx.send("Hi")
+    for mess,emolist in messageDict.items():
+        reacted_message = await ctx.send(mess)
+        watched_message[reacted_message.id] = emolist
+        for emo in emolist:
+            await reacted_message.add_reaction(emo)
     
-    emoji = '\U0001F600'#U0001F44D'
-    print(emoji)
-    emojiList[emoji] = 'test'
+    #emoji = '\N{THUMBS UP SIGN}'
+    #emojiList[emoji] = '685902355404947535'
+    #emoji = '\U0001F600'#U0001F44D'
+    #emojiList[emoji] = 'test'
     
-    watched_message[reacted_message.id] = emojiList
-    await reacted_message.add_reaction(emoji)
+    #watched_message[reacted_message.id] = emojiList
+    #await reacted_message.add_reaction(emoji)
 
 @bot.command()
 async def roll(ctx):
