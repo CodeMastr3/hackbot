@@ -12,15 +12,6 @@ seed(datetime.now())
 
 bot = commands.Bot(command_prefix='!')
 
-"""@bot.command()
-async def help(ctx):
-    helptext = "```"
-    for command in self.bot.commands:
-        helptext+=f"{command}\n"
-    helptext+="```"
-    await ctx.send(helptext)
-    """
-
 @bot.command()
 async def ping(ctx):
     "Returns pong"
@@ -53,8 +44,9 @@ async def addMessage(ctx):
 
 @bot.command()
 async def roll(ctx):
-  "Rolls a die"
-  await ctx.send(randint(1,100))
+  randomNumber = randint(1, 101)
+  author = ctx.author
+  await ctx.send('{.author} rolled a {}'.format(randomNumber))
 
 @bot.command()
 async def logout(ctx):
