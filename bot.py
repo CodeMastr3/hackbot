@@ -12,8 +12,18 @@ seed(datetime.now())
 
 bot = commands.Bot(command_prefix='!')
 
+"""@bot.command()
+async def help(ctx):
+    helptext = "```"
+    for command in self.bot.commands:
+        helptext+=f"{command}\n"
+    helptext+="```"
+    await ctx.send(helptext)
+    """
+
 @bot.command()
 async def ping(ctx):
+    "Returns pong"
     await ctx.send('pong')
 
 messageDict = emojiRole.message
@@ -23,6 +33,7 @@ emojiList = {}
 
 @bot.command()
 async def addMessage(ctx):
+    "Adds the Role Messages"
     global messageDict
     global watched_message
     global emojiList
@@ -42,10 +53,12 @@ async def addMessage(ctx):
 
 @bot.command()
 async def roll(ctx):
-  await ctx.send(randint(1,101))
+  "Rolls a die"
+  await ctx.send(randint(1,100))
 
 @bot.command()
 async def logout(ctx):
+    "Logs the bot out"
     await bot.logout()
 
 async def manage_reactions(reaction, user, added: bool):
