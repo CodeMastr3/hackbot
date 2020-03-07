@@ -2,6 +2,7 @@ import discord
 import discord.utils
 import emojiRole
 import token1
+import ast
 from datetime import datetime
 from random import seed
 from random import randint
@@ -19,6 +20,14 @@ async def ping(ctx):
 messageDict = emojiRole.message
 
 watched_message = {}
+
+with open('dict.txt', 'r') as f:
+    s = f.read()
+    if not s:
+        pass
+    else:
+        watched_message = ast.literal_eval(s)
+
 emojiList = {}
 
 @bot.command()
@@ -30,6 +39,9 @@ async def addMessage(ctx):
     for mess,emolist in messageDict.items():
         reacted_message = await ctx.send(mess)
         watched_message[reacted_message.id] = emolist
+        f = open("dict.txt", "w")
+        f.write(str(watched_message))
+        f.close()
         for emo in emolist:
             await reacted_message.add_reaction(emo)
 
