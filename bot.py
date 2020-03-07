@@ -7,7 +7,6 @@ from random import seed
 from random import randint
 from discord.ext import commands
 
-
 seed(datetime.now())
 
 bot = commands.Bot(command_prefix='!')
@@ -31,20 +30,12 @@ async def addMessage(ctx):
         watched_message[reacted_message.id] = emolist
         for emo in emolist:
             await reacted_message.add_reaction(emo)
-    
-    #emoji = '\N{THUMBS UP SIGN}'
-    #emojiList[emoji] = '685902355404947535'
-    #emoji = '\U0001F600'#U0001F44D'
-    #emojiList[emoji] = 'test'
-    
-    #watched_message[reacted_message.id] = emojiList
-    #await reacted_message.add_reaction(emoji)
 
-@bot.command()
+@bot.command(pass_context=True)
 async def roll(ctx):
-  randomNumber = randint(1, 101)
-  author = ctx.author
-  await ctx.send('{.author} rolled a {}'.format(randomNumber))
+  randomNumber = randint(1, 100)
+  author = ctx.message.author
+  await ctx.send('%s rolled a %d' % (author, randomNumber))
 
 @bot.command()
 async def logout(ctx):
@@ -58,7 +49,7 @@ async def manage_reactions(reaction, user, added: bool):
     mapping = watched_message[messageID]
 
     if not reaction.emoji in mapping:
-        # reaction.emoji is str if normal emoji or ID if custom, but we use both as keys in mapping
+    # reaction.emoji is str if normal emoji or ID if custom, but we use both as keys in mapping
         return
 
     member = discord.utils.get(reaction.message.guild.members, id=user.id)
