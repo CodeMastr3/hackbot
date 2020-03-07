@@ -2,7 +2,13 @@ import discord
 import discord.utils
 import emojiRole
 import token1
+from datetime import datetime
+from random import seed
+from random import randint
 from discord.ext import commands
+
+
+seed(datetime.now())
 
 bot = commands.Bot(command_prefix='!')
 
@@ -25,7 +31,6 @@ async def addMessage(ctx):
         watched_message[reacted_message.id] = emolist
         for emo in emolist:
             await reacted_message.add_reaction(emo)
-    #reacted_message = await ctx.send("Hi")
     
     #emoji = '\N{THUMBS UP SIGN}'
     #emojiList[emoji] = '685902355404947535'
@@ -34,6 +39,10 @@ async def addMessage(ctx):
     
     #watched_message[reacted_message.id] = emojiList
     #await reacted_message.add_reaction(emoji)
+
+@bot.command()
+async def roll(ctx):
+  await ctx.send(randint(1,101))
 
 @bot.command()
 async def logout(ctx):
