@@ -34,7 +34,9 @@ async def addMessage(ctx):
 
 @bot.command()
 async def roll(ctx):
-  await ctx.send(randint(1,101))
+  randomNumber = randint(1, 101)
+  author = ctx.author
+  await ctx.send('{.author} rolled a {}'.format(randomNumber))
 
 @bot.command()
 async def logout(ctx):
