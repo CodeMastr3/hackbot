@@ -18,6 +18,12 @@ async def ping(ctx):
     await ctx.send('pong')
 
 messageDict = emojiRole.message
+with open('roles.txt', 'r') as f:
+    s = f.read()
+    if not s:
+        pass
+    else:
+        messageDict = ast.literal_eval(s.replace("\\\\", "\\"))
 
 watched_message = {}
 
