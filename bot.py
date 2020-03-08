@@ -58,6 +58,7 @@ async def roll(ctx, arg1=1, arg2=100):
     for i in range(arg1):
         randomNumber = randint(1, arg2)
         await ctx.send('%s rolled a %d' % (author, randomNumber))
+        await ctx.message.add_reaction('\U0001F3B2')
 
 @bot.command()
 async def logout(ctx):

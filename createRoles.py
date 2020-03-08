@@ -1,5 +1,4 @@
 from tkinter import *
-#from PIL import Image, ImageTk
 import tkinterScrollbar as tkS
 
 
@@ -11,9 +10,7 @@ class Role(Frame):
 
     def __init__(self, r, e, m, master=None):
         Frame.__init__(self, master)
-        #self.grid(row=1, column=0, sticky=W)
         self.config(width=880)
-        #self.emoji = ImageTk.PhotoImage(Image.open(e))
         self.lf = LabelFrame(master, background="azure")
         self.lf.grid(sticky=W)
         self.lf.config(width=880)
@@ -26,42 +23,22 @@ class Role(Frame):
         self.msg = m
         self.message = self.roleName + "\t\t\t\t" + self.emojiName + "\t\t\t\t" + self.msg
         self.insertMsg()
-        #Label(self.lf, image=self.emoji).grid(row=0, column=1, sticky=W)
 
     def insertMsg(self):
         self.text.insert(END, self.message)
 
-    def edit(self):
-        return
-
-    def delete(self):
-        return
-
-'''
-class RoleCreator(Frame):
-    def __init__(self, master=None):
-        Frame.__init__(self, master)
-        self.grid(sticky=W)
-        lf = LabelFrame(master, background="azure")
-        lf.grid()
-        scrollFrame = tkS.VerticalScrolledFrame(lf)
-        scrollFrame.grid(sticky="we")
-        SetAttributes(master=scrollFrame.interior)
-'''
 
 class SetAttributes(Frame):
-    roles = []
+    roles = {}
     row = 1
 
     def __init__(self, master=None):
         Frame.__init__(self, master)
         self.grid(sticky=W)
         self.config(width=880)
-        #self.grid_columnconfigure(2, minsize=200)
         self.lf = LabelFrame(self, text="Enter Role Name and Emoji Name", background="gray80")
         self.lf.grid(sticky=W)
         self.lf.config(width=880)
-        #self.lf.grid_columnconfigure(2, minsize=200)
         Label(self.lf, text="Role Name", background="gray80").grid(row=0, column=0, sticky=E)
         self.e1 = Entry(self.lf)
         self.e1.grid(row=0, column=1, sticky=W)
@@ -88,8 +65,22 @@ class SetAttributes(Frame):
         roleName = self.e1.get()
         emojiName = self.e2.get()
         msg = self.e3.get()
+        if msg not in self.roles:
+            # to unicode
+            self.roles[msg] = {self.toUnicode(emojiName): roleName}
+        else:
+            self.roles[msg][self.toUnicode(emojiName)] = roleName
         self.RD.display(self.row, roleName, emojiName, msg)
         self.row += 1
+
+    def toUnicode(self, emojiName):
+        unicodes = open("discord_unicode_test.txt", "r")
+        for line in unicodes.readlines():
+            fields = line.strip().split()
+            if fields[1] == emojiName:
+                return fields[0]
+        unicodes.close()
+
 
 class RoleDisplay(Frame):
 
@@ -102,6 +93,7 @@ class RoleDisplay(Frame):
         newFrame = Frame(self)
         newFrame.grid(row=r, column=0, sticky=W)
         Role(id, e, m, newFrame)
+<<<<<<< HEAD
 
 
 '''
@@ -235,3 +227,5 @@ class QueryDisplay (Frame):
         SQLResult(m, c, newFrame)
 
 '''
+=======
+>>>>>>> 92a5a035c02027fe6559075df4173b03ef080827
