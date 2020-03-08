@@ -47,9 +47,9 @@ async def addMessage(ctx):
 
 @bot.command(pass_context=True)
 async def roll(ctx):
-  randomNumber = randint(1, 100)
-  author = ctx.message.author
-  await ctx.send('%s rolled a %d' % (author, randomNumber))
+    randomNumber = randint(1, 100)
+    author = ctx.message.author
+    await ctx.send('%s rolled a %d' % (author, randomNumber))
 
 @bot.command()
 async def logout(ctx):
@@ -65,15 +65,11 @@ async def manage_reactions( payload, added: bool):
 
     if not payload.emoji.name in mapping:
     # reaction.emoji is str if normal emoji or ID if custom, but we use both as keys in mapping
-        print("Hello")
         return
-
     
     guildName = bot.get_guild(payload.guild_id)
     member = discord.utils.get(guildName.members, id=payload.user_id)
-    print(member)
     role = discord.utils.get(guildName.roles, name=mapping[payload.emoji.name])
-    print(role)
 
     if added:
         await member.add_roles(role)
@@ -82,7 +78,6 @@ async def manage_reactions( payload, added: bool):
 
 @bot.event
 async def on_raw_reaction_add(payload):
-    print("Hi")
     await manage_reactions(payload, True)
 
 @bot.event
