@@ -56,20 +56,24 @@ async def logout(ctx):
     "Logs the bot out"
     await bot.logout()
 
-async def manage_reactions(reaction, user, added: bool):
-    if not reaction.message.id in watched_message:#self.watched_message:
+async def manage_reactions( payload, added: bool):
+    if not payload.message_id in watched_message:
         return
 
-    messageID = reaction.message.id
+    messageID = payload.message_id
     mapping = watched_message[messageID]
 
-    if not reaction.emoji in mapping:
+    if not payload.emoji.name in mapping:
     # reaction.emoji is str if normal emoji or ID if custom, but we use both as keys in mapping
+        print("Hello")
         return
 
-    member = discord.utils.get(reaction.message.guild.members, id=user.id)
-
-    role = discord.utils.get(reaction.message.guild.roles, name=mapping[reaction.emoji])
+    
+    guildName = bot.get_guild(payload.guild_id)
+    member = discord.utils.get(guildName.members, id=payload.user_id)
+    print(member)
+    role = discord.utils.get(guildName.roles, name=mapping[payload.emoji.name])
+    print(role)
 
     if added:
         await member.add_roles(role)
@@ -77,11 +81,12 @@ async def manage_reactions(reaction, user, added: bool):
         await member.remove_roles(role)
 
 @bot.event
-async def on_reaction_add(reaction, user):
-    await manage_reactions(reaction, user, True)
+async def on_raw_reaction_add(payload):
+    print("Hi")
+    await manage_reactions(payload, True)
 
 @bot.event
-async def on_reaction_remove(reaction, user):
-    await manage_reactions(reaction, user, False)
+async def on_raw_reaction_remove(payload):
+    await manage_reactions(payload, False)
 
 bot.run(token1.stringToken())
