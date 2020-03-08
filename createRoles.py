@@ -93,3 +93,4 @@ class RoleDisplay(Frame):
         newFrame = Frame(self)
         newFrame.grid(row=r, column=0, sticky=W)
         Role(id, e, m, newFrame)
+

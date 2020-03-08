@@ -65,7 +65,37 @@ async def logout(ctx):
     "Logs the bot out"
     await bot.logout()
 
-async def manage_reactions( payload, added: bool):
+@bot.command(pass_context=True)
+async def sub(ctx, *args):
+    "Subtracts any roles mentioned after sub if they exist"
+    member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
+    for arg in args:
+        role = discord.utils.get(ctx.guild.roles, name=arg)
+        await member.remove_roles(role)
+    await ctx.send('I\'ve removed your requested roles %s!' %ctx.author.name)
+
+"""
+@sub.error
+async def sub_error(error, ctx):
+    await ctx.channel.send("You have probably typed a role that doesn't exist please make sure that isn't the case and try again")
+"""
+
+@bot.command(pass_context=True)
+async def add(ctx, *args):
+    "Adds any roles mentioned after add if they exist"
+    member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
+    for arg in args:
+        role = discord.utils.get(ctx.guild.roles, name=arg)
+        await member.add_roles(role)
+    await ctx.send('I\'ve added your new roles %s!' %ctx.author.name)
+
+"""
+@add.error
+async def add_error(error, ctx):
+    await ctx.channel.send("You have probably typed a role that doesn't exist please make sure that isn't the case and try again")
+"""
+
+async def manage_reactions(payload, added: bool):
     if not payload.message_id in watched_message:
         return
 
