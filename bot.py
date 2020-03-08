@@ -46,10 +46,12 @@ async def addMessage(ctx):
             await reacted_message.add_reaction(emo)
 
 @bot.command(pass_context=True)
-async def roll(ctx):
-  randomNumber = randint(1, 100)
-  author = ctx.message.author
-  await ctx.send('%s rolled a %d' % (author, randomNumber))
+async def roll(ctx, arg1=1, arg2=100):
+    "You can specify the amount of type of dice with a space, else it will be a random num between 1-100"
+    author = ctx.message.author
+    for i in range(arg1):
+        randomNumber = randint(1, arg2)
+        await ctx.send('%s rolled a %d' % (author, randomNumber))
 
 @bot.command()
 async def logout(ctx):
@@ -67,7 +69,6 @@ async def manage_reactions( payload, added: bool):
     # reaction.emoji is str if normal emoji or ID if custom, but we use both as keys in mapping
         print("Hello")
         return
-
     
     guildName = bot.get_guild(payload.guild_id)
     member = discord.utils.get(guildName.members, id=payload.user_id)
