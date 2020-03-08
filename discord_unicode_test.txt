@@ -1,0 +1,8 @@
+\U0001F600 grinning face
+\U0001F921 clown face
+\U0001F479 ogre
+\U0001F47A goblin
+\U0001F47B ghost
+\U0001F47D alien
+\U0001F47E alien monster
+\U0001F916 robot
