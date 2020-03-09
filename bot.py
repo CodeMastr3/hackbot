@@ -37,6 +37,7 @@ with open('dict.txt', 'r') as f:
 emojiList = {}
 
 @bot.command()
+@commands.has_any_role('Cody', 'Dallas')
 async def addMessage(ctx):
     "Adds the Role Messages"
     global messageDict
@@ -97,6 +98,7 @@ async def roll(ctx, arg1=1, arg2=100):
     await ctx.message.add_reaction('\U0001F3B2')
 
 @bot.command()
+@commands.has_any_role('Cody', 'Dallas')
 async def logout(ctx):
     "Logs the bot out"
     await bot.logout()
