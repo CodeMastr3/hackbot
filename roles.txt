@@ -1,1 +1,1 @@
-{'hello': {'\\U0001F47D': 'role1', '\\U0001F479': 'role2'}, 'bye': {'\\U0001F479': 'role3'}}
+{'Press the Ghost for CSCI-580 and the Ogre for CSCI-515': {'\\U0001F47D': 'csci-580', '\\U0001F479': 'csci-515'}, 'Press the Ogre for CSCI-344': {'\\U0001F479': 'csci-344'}}

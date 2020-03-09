@@ -61,6 +61,21 @@ async def myroles(ctx):
         s+="\n"
     await ctx.send('Your roles:\n%s' %s)
 
+@bot.command()
+async def serverroles(ctx):
+    "Lists rolls of the server"
+    s = ""
+    roles = ctx.guild.roles
+    iterroles = iter(roles)
+    next(iterroles)
+    for role in iterroles:
+        if role.name == "hackbot 1.1":
+            break
+        else:
+            s+=role.name
+            s+="\n"
+    await ctx.send('Servers roles:\n%s' %s)
+
 """
 @bot.command()
 async def poll(ctx, arg1):
