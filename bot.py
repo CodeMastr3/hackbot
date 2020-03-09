@@ -51,6 +51,26 @@ async def addMessage(ctx):
         for emo in emolist:
             await reacted_message.add_reaction(emo)
 
+@bot.command()
+async def myroles(ctx):
+    "Lists rolls of member that called this function"
+    member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
+    s = ""
+    for role in member.roles:
+        s+=role.name
+        s+="\n"
+    await ctx.send('Your roles:\n%s' %s)
+
+"""
+@bot.command()
+async def poll(ctx, arg1):
+    "Adds a reactions to a poll message with the number immediately after poll"
+    for i in range(arg1):
+        ctx.send('I\'m not implemented yet')
+        #
+        #await ctx.message.add_reaction('\U0001F3B2')
+"""
+
 @bot.command(pass_context=True)
 async def roll(ctx, arg1=1, arg2=100):
     "You can specify the amount of type of dice with a space, else it will be a random num between 1-100"
