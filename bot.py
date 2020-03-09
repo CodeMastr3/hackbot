@@ -53,7 +53,7 @@ async def addMessage(ctx):
 
 @bot.command()
 async def myroles(ctx):
-    "Lists rolls of member that called this function"
+    "Lists roles of member that called this function"
     member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
     s = ""
     iterroles = iter(member.roles)
@@ -65,7 +65,7 @@ async def myroles(ctx):
 
 @bot.command()
 async def serverroles(ctx):
-    "Lists rolls of the server"
+    "Lists roles of the server"
     s = ""
     roles = ctx.guild.roles
     iterroles = iter(roles)
@@ -92,8 +92,14 @@ async def poll(ctx, arg1):
 async def roll(ctx, arg1=1, arg2=100):
     "You can specify the amount of type of dice with a space, else it will be a random num between 1-100"
     author = ctx.message.author
+    message = ""
+    summ = 0
+    for i in range(arg1):
+        num = randint(1, arg2)
+        summ += num
+        message += f"Roll {i}: {num}\n"
     message = ''.join([f"Roll {i}: {randint(1, arg2)}\n" for i in range(arg1)])
-    await ctx.send('%s rolled:\n%s' % (author, message))
+    await ctx.send('%s rolled:\n%s\nWith a sum of: %d' % (author, message, summ))
     await ctx.message.add_reaction('\U0001F3B2')
 
 @bot.command()
