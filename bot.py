@@ -93,7 +93,7 @@ async def roll(ctx, arg1=1, arg2=100):
     "You can specify the amount of type of dice with a space, else it will be a random num between 1-100"
     author = ctx.message.author
     message = ''.join([f"Roll {i}: {randint(1, arg2)}\n" for i in range(arg1)])
-    await ctx.send('%s rolled:\n%d' % (author, message))
+    await ctx.send('%s rolled:\n%s' % (author, message))
     await ctx.message.add_reaction('\U0001F3B2')
 
 @bot.command()
