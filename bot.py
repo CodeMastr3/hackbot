@@ -56,7 +56,9 @@ async def myroles(ctx):
     "Lists rolls of member that called this function"
     member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
     s = ""
-    for role in member.roles:
+    iterroles = iter(member.roles)
+    next(iterroles)
+    for role in iterroles:
         s+=role.name
         s+="\n"
     await ctx.send('Your roles:\n%s' %s)
