@@ -99,7 +99,6 @@ async def roll(ctx, arg1=1, arg2=100):
         num = randint(1, arg2)
         summ += num
         message += f"Roll {i}: {num}\n"
-    message = ''.join([f"Roll {i}: {randint(1, arg2)}\n" for i in range(arg1)])
     await ctx.send('%s rolled:\n%s\nWith a sum of: %d' % (author, message, summ))
     await ctx.message.add_reaction('\U0001F3B2')
 
