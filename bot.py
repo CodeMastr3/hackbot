@@ -18,10 +18,10 @@ async def ping(ctx):
     await ctx.send('pong')
 
 @bot.command()
-@commands.has_permissions(send_tts_messages=True)
+@commands.has_permissions(send_tts_messages=False)
 async def say(ctx, *, arg):
     "Says what you put"
-    await ctx.send(arg, tts=True)
+    await ctx.send(arg)
 
 messageDict = emojiRole.message
 with open('roles.txt', 'r') as f:
