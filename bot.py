@@ -18,10 +18,10 @@ async def ping(ctx):
     await ctx.send('pong')
 
 @bot.command()
-@commands.has_permissions(send_tts_messages=True)
+@commands.has_permissions(send_tts_messages=False)
 async def say(ctx, *, arg):
     "Says what you put"
-    await ctx.send(arg, tts=True)
+    await ctx.send(arg)
 
 messageDict = emojiRole.message
 with open('roles.txt', 'r') as f:
@@ -105,7 +105,11 @@ async def roll(ctx, arg1=1, arg2=100):
         num = randint(1, arg2)
         summ += num
         message += f"Roll {i}: {num}\n"
-    await ctx.send('%s rolled:\n%s\nWith a sum of: %d' % (author, message, summ))
+    message = f"{author} rolled:\n{message}\nWith a sum of:{summ}"
+    if(len(message) >= 2000):
+        await ctx.send('Woah %s, your rolls are too powerful' % (author))
+    else:
+        await ctx.send('%s' % (message))
     await ctx.message.add_reaction('\U0001F3B2')
 
 @bot.command()
