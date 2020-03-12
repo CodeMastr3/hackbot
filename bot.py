@@ -127,23 +127,23 @@ async def sub_error(ctx, error):
 
 @bot.command(pass_context=True)
 async def sub(ctx, *args):
-    "Subtracts any roles mentioned after sub if they exist say all for all possible roles to remove"
-    member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
-    for arg in args:
-        if(arg == "all"):
-            roles = ctx.guild.roles
-            iterroles = iter(roles)
-            next(iterroles)
-            for role in iterroles:
-                if role.name == "hackbot 1.1":
-                    break
-                else:
-                    await member.remove_roles(role)
-            break
-        else:
-            role = discord.utils.get(ctx.guild.roles, name=arg)
-            await member.remove_roles(role)
-    await ctx.send('I\'ve removed your requested roles %s!' %ctx.author.name)
+	"Subtracts any roles mentioned after sub if they exist say all for all possible roles to remove"
+	member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
+	for arg in args:
+		if(arg == "all"):
+			roles = ctx.guild.roles
+			for role in roles:
+				if role.name == "hackbot 1.1":
+					break
+				elif role.name == "@everyone":
+					continue
+				else:
+					await member.remove_roles(role)
+			break
+		else:
+			role = discord.utils.get(ctx.guild.roles, name=arg)
+			await member.remove_roles(role)
+	await ctx.send('I\'ve removed your requested roles %s!' %ctx.author.name)
 
 @sub.error
 async def sub_error(ctx, error):
@@ -151,23 +151,23 @@ async def sub_error(ctx, error):
 
 @bot.command(pass_context=True)
 async def add(ctx, *args):
-    "Adds any roles mentioned after add if they exist say all for all roles possible to add"
-    member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
-    for arg in args:
-        if(arg == "all"):
-            roles = ctx.guild.roles
-            iterroles = iter(roles)
-            next(iterroles)
-            for role in iterroles:
-                if role.name == "hackbot 1.1":
-                    break
-                else:
-                    await member.add_roles(role)
-            break
-        else:
-            role = discord.utils.get(ctx.guild.roles, name=arg)
-            await member.add_roles(role)
-    await ctx.send('I\'ve added your new roles %s!' %ctx.author.name)
+	"Adds any roles mentioned after add if they exist say all for all roles possible to add"
+	member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
+	for arg in args:
+		if(arg == "all"):
+			roles = ctx.guild.roles
+			for role in roles:
+				if role.name == "hackbot 1.1":
+					break
+				elif role.name == "@everyone":
+					continue
+				else:
+					await member.add_roles(role)
+			break
+		else:
+			role = discord.utils.get(ctx.guild.roles, name=arg)
+			await member.add_roles(role)
+	await ctx.send('I\'ve added your new roles %s!' %ctx.author.name)
 
 @add.error
 async def add_error(ctx, error):
