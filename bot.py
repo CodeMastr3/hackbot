@@ -117,6 +117,14 @@ async def logout(ctx):
     "Logs the bot out"
     await bot.logout()
 
+@bot.command()
+async def escalate(ctx):
+    await ctx.send('ESCALATING')
+
+@logout.error
+async def sub_error(ctx, error):
+    await ctx.channel.send("You don't have the permission to run that command")
+
 @bot.command(pass_context=True)
 async def sub(ctx, *args):
     "Subtracts any roles mentioned after sub if they exist say all for all possible roles to remove"
@@ -137,11 +145,9 @@ async def sub(ctx, *args):
             await member.remove_roles(role)
     await ctx.send('I\'ve removed your requested roles %s!' %ctx.author.name)
 
-"""
 @sub.error
-async def sub_error(error, ctx):
+async def sub_error(ctx, error):
     await ctx.channel.send("You have probably typed a role that doesn't exist please make sure that isn't the case and try again")
-"""
 
 @bot.command(pass_context=True)
 async def add(ctx, *args):
@@ -163,11 +169,9 @@ async def add(ctx, *args):
             await member.add_roles(role)
     await ctx.send('I\'ve added your new roles %s!' %ctx.author.name)
 
-"""
 @add.error
-async def add_error(error, ctx):
+async def add_error(ctx, error):
     await ctx.channel.send("You have probably typed a role that doesn't exist please make sure that isn't the case and try again")
-"""
 
 async def manage_reactions(payload, added: bool):
     if not payload.message_id in watched_message:
