@@ -97,7 +97,7 @@ async def poll(ctx, arg1):
 async def joined(ctx):
     "Tells you when you joined the server using UTC"
     member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
-    await ctx.send('Time %s joined %s in UTC:\n%s' %(member.display_name, ctx.guild.name, member.joined_at))
+    await ctx.send('Time %s joined %s in UTC:\n%s' %(member.mention, ctx.guild.name, member.joined_at))
 
 
 @bot.command(pass_context=True)
@@ -149,7 +149,7 @@ async def sub(ctx, *args):
         else:
             role = discord.utils.get(ctx.guild.roles, name=arg)
             await member.remove_roles(role)
-    await ctx.send('I\'ve removed your requested roles %s!' %ctx.author.name)
+    await ctx.send('I\'ve removed your requested roles %s!' %member.mention)
 
 @sub.error
 async def sub_error(ctx, error):
@@ -173,7 +173,7 @@ async def add(ctx, *args):
         else:
             role = discord.utils.get(ctx.guild.roles, name=arg)
             await member.add_roles(role)
-    await ctx.send('I\'ve added your new roles %s!' %ctx.author.name)
+    await ctx.send('I\'ve added your new roles %s!' %member.mention)
 
 @add.error
 async def add_error(ctx, error):
