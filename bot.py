@@ -97,7 +97,7 @@ async def poll(ctx, arg1):
 async def joined(ctx):
     "Tells you when you joined the server using UTC"
     member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
-    await ctx.send('Time you joined %s in UTC:\n%s' %(ctx.guild.name, member.joined_at))
+    await ctx.send('Time %s joined %s in UTC:\n%s' %(member.display_name, ctx.guild.name, member.joined_at))
 
 
 @bot.command(pass_context=True)
