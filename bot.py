@@ -93,6 +93,12 @@ async def poll(ctx, arg1):
         #
         #await ctx.message.add_reaction('\U0001F3B2')
 """
+@bot.command()
+async def joined(ctx):
+    "Tells you when you joined the server using UTC"
+    member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
+    await ctx.send('Time you joined %s in UTC:\n%s' %(ctx.guild.name, member.joined_at))
+
 
 @bot.command(pass_context=True)
 async def roll(ctx, arg1=1, arg2=100):
