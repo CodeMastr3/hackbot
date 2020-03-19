@@ -22,6 +22,11 @@ async def say(ctx, *, arg):
     "Says what you put"
     await ctx.send(arg)
 
+@bot.command(hidden=True)
+async def secret(ctx, *, arg):
+    await ctx.send(arg)
+    await ctx.message.delete()
+
 messageDict = emojiRole.message
 with open('roles.txt', 'r') as f:
     s = f.read()
@@ -117,7 +122,7 @@ async def roll(ctx, arg1=1, arg2=100):
         await ctx.send('%s' % (message))
     await ctx.message.add_reaction('\U0001F3B2')
 
-@bot.command()
+@bot.command(hidden=True)
 @commands.has_any_role('Cody', 'Dallas')
 async def logout(ctx):
     "Logs the bot out"
