@@ -206,7 +206,7 @@ async def manage_reactions(payload, added: bool):
 
 @bot.event
 async def on_member_join(member):
-    await bot.get_channel(686349392185524246).send('Welcome to the server %s! In order to view channels you need to add the relevant roles. Type !help, !serverroles, !add "role1" "role2" and you are all set' %member.mention)
+    await bot.get_channel(686349392185524246).send('Welcome to the server %s! In order to view channels you need to add the relevant roles. First go to #rules-and-info and read the rules. Then type !help, !serverroles, !add "role1" "role2" and you are all set' %member.mention)
 
 @bot.event
 async def on_raw_reaction_add(payload):
