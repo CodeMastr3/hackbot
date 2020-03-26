@@ -98,12 +98,12 @@ async def poll(ctx, arg1):
         #
         #await ctx.message.add_reaction('\U0001F3B2')
 """
+
 @bot.command()
 async def joined(ctx):
     "Tells you when you joined the server using UTC"
     member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
     await ctx.send('Time %s joined %s in UTC:\n%s' %(member.mention, ctx.guild.name, member.joined_at))
-
 
 @bot.command(pass_context=True)
 async def roll(ctx, arg1=1, arg2=100):
@@ -205,6 +205,10 @@ async def manage_reactions(payload, added: bool):
         await member.remove_roles(role)
 
 @bot.event
+async def on_member_join(member):
+    await bot.get_channel(686349392185524246).send('Welcome to the server %s! In order to view channels you need to add the relevant roles. Type !help, !serverroles, !add "role1" "role2" and you are all set' %member.mention)
+
+@bot.event
 async def on_raw_reaction_add(payload):
     await manage_reactions(payload, True)
 
@@ -213,4 +217,3 @@ async def on_raw_reaction_remove(payload):
     await manage_reactions(payload, False)
 
 bot.run(token1.stringToken())
-
