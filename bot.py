@@ -91,8 +91,8 @@ async def serverroles(ctx):
 
 """
 @bot.command()
-async def poll(ctx, arg1):
-    "Adds a reactions to a poll message with the number immediately after poll"
+async def poll(ctx, *arg):
+    "Adds (a) reaction(s) to a poll message with the number immediately after poll"
     for i in range(arg1):
         ctx.send('I\'m not implemented yet')
         #
@@ -133,7 +133,7 @@ async def escalate(ctx):
     await ctx.send('ESCALATING')
 
 @logout.error
-async def sub_error(ctx, error):
+async def logout_error(ctx, error):
     await ctx.channel.send("You don't have the permission to run that command")
 
 @bot.command(pass_context=True)
