@@ -65,7 +65,7 @@ async def addMessage(ctx):
 @bot.command()
 async def myroles(ctx):
     "Lists roles of member that called this function"
-    member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
+    member = ctx.author
     s = ""
     iterroles = iter(member.roles)
     next(iterroles)
@@ -102,7 +102,7 @@ async def poll(ctx, *arg):
 @bot.command()
 async def joined(ctx):
     "Tells you when you joined the server using UTC"
-    member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
+    member = ctx.author
     await ctx.send('Time %s joined %s in UTC:\n%s' %(member.mention, ctx.guild.name, member.joined_at))
 
 @bot.command(pass_context=True)
@@ -139,7 +139,7 @@ async def logout_error(ctx, error):
 @bot.command(pass_context=True)
 async def sub(ctx, *args):
     "Subtracts any roles mentioned after sub if they exist say all for all possible roles to remove"
-    member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
+    member = ctx.author
     for arg in args:
         if(arg == "all"):
             roles = ctx.guild.roles
@@ -163,7 +163,7 @@ async def sub_error(ctx, error):
 @bot.command(pass_context=True)
 async def add(ctx, *args):
     "Adds any roles mentioned after add if they exist say all for all roles possible to add"
-    member = discord.utils.get(ctx.guild.members, name=ctx.author.name)
+    member = ctx.author
     for arg in args:
         if(arg == "all"):
             roles = ctx.guild.roles
