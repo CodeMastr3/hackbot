@@ -108,7 +108,13 @@ async def joined(ctx):
 @bot.command(pass_context=True)
 async def roll(ctx, arg1=1, arg2=100):
     "You can specify the amount of type of dice with a space, else it will be a random num between 1-100"
+    await ctx.message.add_reaction('\U0001F3B2')
+    if type(arg1) is not int or type(arg2) is not int:
+        return
     author = ctx.message.author
+    if arg1 > 100 or arg2 > 100:
+        await ctx.send('Woah %s, your rolls are too powerful' % (author))
+        return
     message = ""
     summ = 0
     for i in range(arg1):
@@ -120,7 +126,6 @@ async def roll(ctx, arg1=1, arg2=100):
         await ctx.send('Woah %s, your rolls are too powerful' % (author))
     else:
         await ctx.send('%s' % (message))
-    await ctx.message.add_reaction('\U0001F3B2')
 
 @bot.command(hidden=True)
 @commands.has_any_role('Cody', 'Dallas')
