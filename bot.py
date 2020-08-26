@@ -115,6 +115,10 @@ async def roll(ctx, arg1=1, arg2=100):
     if arg1 > 100 or arg2 > 100:
         await ctx.send('Woah %s, your rolls are too powerful' % (author))
         return
+    elif arg1 < 1 or arg2 < 0:
+        await ctx.send('Woah %s, your rolls are not powerful enough' % (author))
+        return
+
     message = ""
     summ = 0
     for i in range(arg1):
