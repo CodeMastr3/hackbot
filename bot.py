@@ -3,6 +3,7 @@ import discord.utils
 import emojiRole
 import token1
 import ast
+
 from datetime import datetime
 from random import seed
 from random import randint
@@ -106,23 +107,23 @@ async def joined(ctx):
     await ctx.send('Time %s joined %s in UTC:\n%s' %(member.mention, ctx.guild.name, member.joined_at))
 
 @bot.command(pass_context=True)
-async def roll(ctx, arg1=2, arg2=6):
+async def roll(ctx, arg1="1", arg2="100"):
     "You can specify the amount of dice with a space or delimited with a 'd', else it will be 2 random nums between 1-6"
     await ctx.message.add_reaction('\U0001F3B2')
     author = ctx.message.author.display_name
     sum_dice = 0
     message = ""
-    arg1 = arg1.lower()
+    arg1 = str(arg1).lower()
 
-    if("d" in str(arg1)):
+    if("d" in arg1):
         arg1, arg2 = arg1.split("d", 1)
         if(arg1 == ""):
-            arg1 = 1
+            arg1 = "1"
         if(arg2 == ""):
             await ctx.send(f"Woah {author}, your rolls are too powerful")
             return;
 
-    if(not str(arg1).isdecimal() or not str(arg2).isdecimal()):
+    if(not arg1.isdecimal() or not str(arg2).isdecimal()):
         await ctx.send(f"Woah {author}, your rolls are too powerful")
         return
 
@@ -137,7 +138,7 @@ async def roll(ctx, arg1=2, arg2=6):
         return
 
     # Is it possible to be *too* pythonic?
-    message += (f"{author} rolled {arg1} d{arg2}{(chr(39) + 's') if arg1 != 1 else ''}")
+    message += (f"{author} rolled {arg1} d{arg2}{(chr(39) + 's') if arg1 != 1 else ''}\n")
     # Never.
 
     message += ("\n")
@@ -145,14 +146,14 @@ async def roll(ctx, arg1=2, arg2=6):
         roll = randint(1, arg2)
         sum_dice += roll
         if(arg2 == 20 and roll == 20):
-            message += (f"Roll {i}: {roll} - Critical Success! (20)")
+            message += (f"Roll {i}: {roll} - Critical Success! (20)\n")
         elif(arg2 == 20 and roll == 1):
-            message += (f"Roll {i}: {roll} - Critical Failure! (1)")
+            message += (f"Roll {i}: {roll} - Critical Failure! (1)\n")
         else:
-            message += (f"Roll {i}: {roll}")
+            message += (f"Roll {i}: {roll}\n")
 
     message += ("\n")
-    message += (f"Sum of all rolls: {sum_dice}")
+    message += (f"Sum of all rolls: {sum_dice}\n")
     if(len(message) >= 2000):
         await ctx.send(f"Woah {author}, your rolls are too powerful")
     else:
