@@ -106,7 +106,7 @@ async def joined(ctx):
     await ctx.send('Time %s joined %s in UTC:\n%s' %(member.mention, ctx.guild.name, member.joined_at))
 
 @bot.command(pass_context=True)
-def roll(ctx, arg1=2, arg2=6):
+async def roll(ctx, arg1=2, arg2=6):
     "You can specify the amount of dice with a space or delimited with a 'd', else it will be 2 random nums between 1-6"
     await ctx.message.add_reaction('\U0001F3B2')
     author = ctx.message.author.display_name
