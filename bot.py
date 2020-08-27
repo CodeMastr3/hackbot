@@ -3,6 +3,7 @@ import discord.utils
 import emojiRole
 import token1
 import ast
+
 from datetime import datetime
 from random import seed
 from random import randint
@@ -106,30 +107,57 @@ async def joined(ctx):
     await ctx.send('Time %s joined %s in UTC:\n%s' %(member.mention, ctx.guild.name, member.joined_at))
 
 @bot.command(pass_context=True)
-async def roll(ctx, arg1=1, arg2=100):
-    "You can specify the amount of type of dice with a space, else it will be a random num between 1-100"
+async def roll(ctx, arg1="1", arg2="100"):
+    "You can specify the amount of dice with a space or delimited with a 'd', else it will be 2 random nums between 1-6"
     await ctx.message.add_reaction('\U0001F3B2')
-    if type(arg1) is not int or type(arg2) is not int:
-        return
-    author = ctx.message.author
-    if arg1 > 100 or arg2 > 100:
-        await ctx.send('Woah %s, your rolls are too powerful' % (author))
-        return
-    elif arg1 < 1 or arg2 < 0:
-        await ctx.send('Woah %s, your rolls are not powerful enough' % (author))
+    author = ctx.message.author.display_name
+    sum_dice = 0
+    message = ""
+    arg1 = str(arg1).lower()
+
+    if("d" in arg1):
+        arg1, arg2 = arg1.split("d", 1)
+        if(arg1 == ""):
+            arg1 = "1"
+        if(arg2 == ""):
+            await ctx.send(f"Woah {author}, your rolls are too powerful")
+            return;
+
+    if(not arg1.isdecimal() or not str(arg2).isdecimal()):
+        await ctx.send(f"Woah {author}, your rolls are too powerful")
         return
 
-    message = ""
-    summ = 0
-    for i in range(arg1):
-        num = randint(1, arg2)
-        summ += num
-        message += f"Roll {i}: {num}\n"
-    message = f"{author} rolled:\n{message}\nWith a sum of:{summ}"
+    arg1 = int(arg1)
+    arg2 = int(arg2)
+
+    if(arg1 > 100 or arg2 > 100):
+        await ctx.send(f"Woah {author}, your rolls are too powerful")
+        return
+    elif arg1 < 1 or arg2 < 1:
+        await ctx.send(f"Woah {author}, your rolls are not powerful enough")
+        return
+
+    # Is it possible to be *too* pythonic?
+    message += (f"{author} rolled {arg1} d{arg2}{(chr(39) + 's') if arg1 != 1 else ''}\n")
+    # Never.
+
+    message += ("\n")
+    for i in range(1, arg1+1):
+        roll = randint(1, arg2)
+        sum_dice += roll
+        if(arg2 == 20 and roll == 20):
+            message += (f"Roll {i}: {roll} - Critical Success! (20)\n")
+        elif(arg2 == 20 and roll == 1):
+            message += (f"Roll {i}: {roll} - Critical Failure! (1)\n")
+        else:
+            message += (f"Roll {i}: {roll}\n")
+
+    message += ("\n")
+    message += (f"Sum of all rolls: {sum_dice}\n")
     if(len(message) >= 2000):
-        await ctx.send('Woah %s, your rolls are too powerful' % (author))
+        await ctx.send(f"Woah {author}, your rolls are too powerful")
     else:
-        await ctx.send('%s' % (message))
+        await ctx.send(message)
 
 @bot.command(hidden=True)
 @commands.has_any_role('Cody', 'Dallas')
