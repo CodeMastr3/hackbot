@@ -1,7 +1,7 @@
 import discord
 import discord.utils
 import emojiRole
-import token_fall as token
+import token1 as token
 import ast
 import requests
 
