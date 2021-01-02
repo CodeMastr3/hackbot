@@ -1,8 +1,9 @@
 import discord
 import discord.utils
 import emojiRole
-import token1
+import token1 as token
 import ast
+import requests
 
 from datetime import datetime
 from random import seed
@@ -169,6 +170,31 @@ async def logout(ctx):
 async def escalate(ctx):
     await ctx.send('ESCALATING')
 
+def gll(js, loc):
+    """
+    Used for the vaccines command, will find the first information
+    based off the country.
+    """
+    for s in js:
+        if s['location'] == loc:
+            return s
+    return None
+
+
+@bot.command()
+async def vaccines(ctx, loc = "United States"):
+    url = "https://www.howmanyvaccinated.com/vaccine"
+    page = requests.get(url);
+    js = page.json()
+    dat = gll(js,loc)
+    msg = ""
+    if dat is not None:
+        msg = f"In {loc} as of {dat['date']}, there have been {dat['total_vaccinations']} vaccinations, totalling {dat['total_vaccinations_per_hundred']}% of the population."
+    else:
+        msg = f"Unable to find information for {loc}"
+    await ctx.send(msg)
+
+
 @logout.error
 async def logout_error(ctx, error):
     await ctx.channel.send("You don't have the permission to run that command")
@@ -255,4 +281,4 @@ async def on_raw_reaction_add(payload):
 async def on_raw_reaction_remove(payload):
     await manage_reactions(payload, False)
 
-bot.run(token1.stringToken())
+bot.run(token.stringToken())
