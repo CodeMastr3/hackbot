@@ -1,7 +1,7 @@
 import discord
 import discord.utils
 import emojiRole
-import token1 as token
+import token_fall as token
 import ast
 import requests
 
@@ -170,6 +170,15 @@ async def logout(ctx):
 async def escalate(ctx):
     await ctx.send('ESCALATING')
 
+def normalize_location(loc):
+    """
+    Used by vaccines command:
+    Will change a phrase like "uNITED sTATES" to "United States" since all location are stored as proper nouns
+    """
+    arr = [i.lower() for i in loc.split(' ')]
+    arr =[''.join([word[i] if i != 0 else word[i].upper() for i in range(len(word))]) for word in arr]
+    return ' '.join(arr)
+
 def gll(js, loc):
     """
     Used for the vaccines command, will find the first information
@@ -183,9 +192,16 @@ def gll(js, loc):
 
 @bot.command()
 async def vaccines(ctx, loc = "United States"):
+    """
+    Uses the information available at howmanyvaccinated.com to state how many people have been vaccinated based off location
+    Will default to United States
+    """
     url = "https://www.howmanyvaccinated.com/vaccine"
     page = requests.get(url);
     js = page.json()
+
+    #Make sure that the location has every chance to succeed without fuzzy finding
+    loc = normalize_location(loc)
     dat = gll(js,loc)
     msg = ""
     if dat is not None:
