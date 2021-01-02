@@ -19,7 +19,7 @@ docutils==0.14
 et-xmlfile==1.0.1
 greenlet==0.4.12
 html5lib==0.999999999
-httplib2==0.9.2
+httplib2==0.18.0
 idna==2.6
 imagesize==0.7.1
 jdcal==1.4.1
