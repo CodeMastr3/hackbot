@@ -8,7 +8,7 @@ chardet==3.0.4
 chebpy==0.2
 click==7.1.2
 command-not-found==0.3
-cryptography==2.1.4
+cryptography==3.2
 cupshelpers==1.0
 cycler==0.10.0
 decorator==4.1.2
