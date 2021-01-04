@@ -1,27 +1,34 @@
 import discord
 import discord.utils
 import emojiRole
-import token1 as token
 import ast
 import requests
+import os
+
 
 from datetime import datetime
+from dotenv import load_dotenv
 from random import seed
 from random import randint
 from discord.ext import commands
 
 seed(datetime.now())
+load_dotenv('.env')
 
 bot = commands.Bot(command_prefix='!')
 
 @bot.command()
 async def ping(ctx):
-    "Returns pong"
+    """
+    Returns pong
+    """
     await ctx.send('pong')
 
 @bot.command()
 async def say(ctx, *, arg):
-    "Says what you put"
+    """
+    Says what you put
+    """
     await ctx.send(arg)
 
 @bot.command(hidden=True)
@@ -51,7 +58,9 @@ emojiList = {}
 @bot.command()
 @commands.has_any_role('Cody', 'Dallas')
 async def addMessage(ctx):
-    "Adds the Role Messages"
+    """
+    Adds the Role Messages
+    """
     global messageDict
     global watched_message
     global emojiList
@@ -66,7 +75,9 @@ async def addMessage(ctx):
 
 @bot.command()
 async def myroles(ctx):
-    "Lists roles of member that called this function"
+    """
+    Lists roles of member that called this function
+    """
     member = ctx.author
     s = ""
     iterroles = iter(member.roles)
@@ -78,7 +89,9 @@ async def myroles(ctx):
 
 @bot.command()
 async def serverroles(ctx):
-    "Lists roles of the server"
+    """
+    Lists roles of the server
+    """
     s = ""
     roles = ctx.guild.roles
     iterroles = iter(roles)
@@ -103,13 +116,17 @@ async def poll(ctx, *arg):
 
 @bot.command()
 async def joined(ctx):
-    "Tells you when you joined the server using UTC"
+    """
+    Tells you when you joined the server using UTC
+    """
     member = ctx.author
     await ctx.send('Time %s joined %s in UTC:\n%s' %(member.mention, ctx.guild.name, member.joined_at))
 
 @bot.command(pass_context=True)
 async def roll(ctx, arg1="1", arg2="100"):
-    "You can specify the amount of dice with a space or delimited with a 'd', else it will be 2 random nums between 1-6"
+    """
+    You can specify the amount of dice with a space or delimited with a 'd', else it will be 2 random nums between 1-6
+    """
     await ctx.message.add_reaction('\U0001F3B2')
     author = ctx.message.author.display_name
 
@@ -167,7 +184,9 @@ async def roll(ctx, arg1="1", arg2="100"):
 @bot.command(hidden=True)
 @commands.has_any_role('Cody', 'Dallas')
 async def logout(ctx):
-    "Logs the bot out"
+    """
+    Logs the bot out
+    """
     await bot.logout()
 
 @bot.command()
@@ -223,7 +242,9 @@ async def logout_error(ctx, error):
 
 @bot.command(pass_context=True)
 async def sub(ctx, *args):
-    "Subtracts any roles mentioned after sub if they exist say all for all possible roles to remove"
+    """
+    Subtracts any roles mentioned after sub if they exist say all for all possible roles to remove
+    """
     member = ctx.author
     for arg in args:
         if(arg == "all"):
@@ -247,7 +268,7 @@ async def sub_error(ctx, error):
 
 @bot.command(pass_context=True)
 async def add(ctx, *args):
-    "Adds any roles mentioned after add if they exist say all for all roles possible to add"
+    """Adds any roles mentioned after add if they exist say all for all roles possible to add"""
     member = ctx.author
     for arg in args:
         if(arg == "all"):
@@ -303,4 +324,4 @@ async def on_raw_reaction_add(payload):
 async def on_raw_reaction_remove(payload):
     await manage_reactions(payload, False)
 
-bot.run(token.stringToken())
+bot.run(os.getenv('TOKEN'))
