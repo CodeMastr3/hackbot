@@ -184,7 +184,7 @@ def gll(js, loc):
     Used for the vaccines command, will find the first information
     based off the country.
     """
-    for s in js:
+    for s in js[::-1]:
         if s['location'] == loc:
             return s
     return None
