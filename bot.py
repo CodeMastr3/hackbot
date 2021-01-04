@@ -205,7 +205,9 @@ async def vaccines(ctx, loc = "United States"):
     dat = gll(js,loc)
     msg = ""
     if dat is not None:
-        msg = f"In {loc} as of {dat['date']}, there have been {dat['total_vaccinations']} vaccinations, totalling {dat['total_vaccinations_per_hundred']}% of the population."
+        #Format the number with commas to make it easier to read
+        tot = "{:,}".format(int(dat['total_vaccinations']))
+        msg = f"In {loc} as of {dat['date']}, there have been {tot} vaccinations, totalling {dat['total_vaccinations_per_hundred']}% of the population."
     else:
         msg = f"Unable to find information for {loc}"
     await ctx.send(msg)
