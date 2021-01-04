@@ -139,10 +139,7 @@ async def roll(ctx, arg1="1", arg2="100"):
     You can specify the amount of dice with a space or delimited with a 'd', else it will be 2 random nums between 1-6
     """
     await ctx.message.add_reaction('\U0001F3B2')
-    author = ctx.message.author.display_name
-
-    #Make sure author won't send pings to people
-    author = author.replace("@", "[@]")
+    author = ctx.message.author.mention  # use mention string to avoid pinging other people
 
     sum_dice = 0
     message = ""
