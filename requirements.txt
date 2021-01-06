@@ -1,10 +1,12 @@
 aiohttp==3.6.3
 async-timeout==3.0.1
 attrs==20.3.0
+black==20.8b1 
 certifi==2020.12.5
 chardet==3.0.4
 discord==1.0.1
 discord.py==1.5.1
+python-dotenv==0.15.0 
 idna==2.10
 idna-ssl==1.1.0
 multidict==4.7.6
