@@ -1,18 +1,19 @@
 import discord
 import discord.utils
 import emojiRole
+import token1 as token
 import ast
 import requests
-import os
+# import os
 
 from datetime import datetime
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from random import seed
 from random import randint
 from discord.ext import commands
 
 seed(datetime.now())
-load_dotenv('.env')
+# load_dotenv('.env')
 
 bot = commands.Bot(command_prefix='!')
 
@@ -361,4 +362,5 @@ async def on_raw_reaction_remove(payload):
     await manage_reactions(payload, False)
 
 
-bot.run(os.getenv('TOKEN'))
+# bot.run(os.getenv('TOKEN'))
+bot.run(token.stringToken())
