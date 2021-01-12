@@ -4,7 +4,7 @@ import emojiRole
 import token1 as token
 import ast
 import requests
-# import os
+#import os
 
 from datetime import datetime
 # from dotenv import load_dotenv
@@ -35,8 +35,12 @@ async def say(ctx, *, arg):
 
 
 @bot.command(hidden=True)
-async def secret(ctx, *, arg):
-    await ctx.send(arg)
+async def secret(ctx, *, arg=''):
+    if(ctx.message.attachments):
+        for a in ctx.message.attachments:
+            await ctx.send(a.url)
+    if(len(arg) > 0):
+        await ctx.send(arg)
     await ctx.message.delete()
 
 
@@ -362,5 +366,5 @@ async def on_raw_reaction_remove(payload):
     await manage_reactions(payload, False)
 
 
-# bot.run(os.getenv('TOKEN'))
+#bot.run(os.getenv('TOKEN'))
 bot.run(token.stringToken())
