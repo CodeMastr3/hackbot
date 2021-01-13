@@ -4,8 +4,10 @@ import emojiRole
 import token1 as token
 import ast
 import requests
+import subprocess
 #import os
 
+import time
 from datetime import datetime
 # from dotenv import load_dotenv
 from random import seed
@@ -13,6 +15,7 @@ from random import randint
 from discord.ext import commands
 
 seed(datetime.now())
+start_time = time.time()
 # load_dotenv('.env')
 
 bot = commands.Bot(command_prefix='!')
@@ -196,6 +199,37 @@ async def roll(ctx, arg1="1", arg2="100"):
     else:
         await ctx.send(message)
 
+def get_server_uptime():
+    """
+    Helper function for uptime to get server uptime
+    """
+    result = subprocess.run(['uptime', '-p'], stdout=subprocess.PIPE)
+    return result.stdout.decode("utf-8").rstrip()
+
+def pretty_print_uptime(time):
+    #Chomp off the tiny bits
+    time = int(time)
+    #Need all data in terms of seconds
+    minute = 60
+    hour = minute * 60
+    day = hour * 24
+    days = time//day #How many days has this been up?
+    time %= day #Get rid of days
+    hours = time//hour
+    time %= hour
+    minutes = time//minute
+    time %= minute
+    seconds = time
+    return f"up {days} days, {hours} hours, {minutes} minutes"
+
+@bot.command()
+async def uptime(ctx):
+    """
+    Displays the uptime of both the bot and the server the bot is running on
+    """
+    current = time.time()
+    delta = current - start_time
+    await ctx.send(f"Bot has been {pretty_print_uptime(delta)}\nServer has been {get_server_uptime()}")
 
 @bot.command(hidden=True)
 @commands.has_any_role('Cody', 'Dallas')
