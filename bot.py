@@ -29,7 +29,7 @@ async def ping(ctx):
     await ctx.send('pong')
 
 @bot.command()
-aysnc def whoisjoe(ctx):
+async def whoisjoe(ctx):
     "Joe mama meme lolol"
     await ctx.send('Joe Mama! trollololol')
 
