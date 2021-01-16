@@ -6,6 +6,7 @@ import ast
 import requests
 import subprocess
 #import os
+import json
 
 import time
 from datetime import datetime
@@ -17,6 +18,19 @@ from discord.ext import commands
 seed(datetime.now())
 start_time = time.time()
 # load_dotenv('.env')
+
+#Load json data
+json_file = "db.json"
+json_db = {}
+#If file doesn't exist, screw it, we'll write it later
+try:
+    with open(json_file, 'r') as f:
+        try:
+            json_db = json.load(f)
+        except:
+            json_db = {}
+except:
+    pass
 
 bot = commands.Bot(command_prefix='!')
 
@@ -30,8 +44,25 @@ async def ping(ctx):
 
 @bot.command()
 async def whoisjoe(ctx):
-    "Joe mama meme lolol"
-    await ctx.send('Joe Mama! trollololol')
+    """
+    Joe mama meme lolol
+    """
+    if "whoisjoe" in json_db:
+        await ctx.send(json_db['whoisjoe'])
+    else:
+        await ctx.send("JOE MAMA")
+
+@bot.command(hidden=True)
+async def joeis(ctx, *, arg):
+    """
+    Will alter the output from whoisjoe
+    """
+    #Alter memory copy
+    json_db['whoisjoe'] = arg
+    #Write to FS
+    with open(json_file, 'w') as f:
+        json.dump(json_db, f)
+    await ctx.message.delete()
 
 @bot.command()
 async def say(ctx, *, arg):
