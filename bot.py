@@ -330,7 +330,6 @@ async def uwu(ctx, arg1=""):
     of text (argument is text), or a link to a message (argument is a url)
     """
     await ctx.message.add_reaction('😽')
-    author = ctx.message.author.mention  # use mention string to avoid pinging other people
     argIsText = False
     channel = ctx.channel
     message = ""
