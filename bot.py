@@ -328,13 +328,41 @@ async def roll(ctx, arg1="1", arg2="100"):
 
 @bot.command(pass_context=True)
 async def owo(ctx, arg1=""):
+    """
+    !OwO Convewts da specified stwing into OwO speak ʕʘ‿ʘʔ
+
+    uwusage: !owo Hello sir. Have you heard of our lord and savior Jesus Christ?
+    returns: Hewwo siw. Have uu heawd of ouw wowd and saviow Jesus Chwist? (人◕ω◕)
+
+    and uu can even input a message url ow message id!!!! (• o •)
+
+    uwusage: !owo <message ID/message URL>
+    returns: owofied message
+
+    ow uu can simpwy use !owo by itsewf to owoify da pwevious message (╯﹏╰）
+
+    uwusage: !owo
+    returns: owofied message
+    """
     await uwu(ctx, arg1)
 
 @bot.command(pass_context=True)
 async def uwu(ctx, arg1=""):
     """
-    uwu-ize either the comment directly above (no argument), a body
-    of text (argument is text), or a link to a message (argument is a url)
+    !UwU Convewts da specified stwing into OwO speak ʕʘ‿ʘʔ
+
+    uwusage: !uwu Hello sir. Have you heard of our lord and savior Jesus Christ?
+    returns: Hewwo siw. Have uu heawd of ouw wowd and saviow Jesus Chwist? (人◕ω◕)
+
+    and uu can even input a message url ow message id!!!! (• o •)
+
+    uwusage: !uwu <message ID/message URL>
+    returns: uwufied message
+
+    ow uu can simpwy use !uwu by itsewf to uwuify da pwevious message (╯﹏╰）
+
+    uwusage: !uwu
+    returns: uwufied message
     """
     await ctx.message.add_reaction('😽')
     argIsText = False
