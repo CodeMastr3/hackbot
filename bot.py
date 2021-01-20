@@ -1,3 +1,4 @@
+
 import discord
 import discord.utils
 import emojiRole
@@ -13,6 +14,7 @@ from datetime import datetime
 # from dotenv import load_dotenv
 from random import seed
 from random import randint
+from random import choice
 from discord.ext import commands
 
 seed(datetime.now())
@@ -34,6 +36,93 @@ except:
 
 bot = commands.Bot(command_prefix='!')
 
+#variables needed for !uwu
+#I mean what else would it be for?
+suffixes = [
+    ' ( ͡° ᴥ ͡°)',
+    ' (´・ω・｀)',
+    ' (ʘᗩʘ\')',
+    ' (இωஇ )',
+    ' (๑•́ ₃ •̀๑)',
+    ' (• o •)',
+    ' (⁎˃ᆺ˂)',
+    ' (╯﹏╰）',
+    ' (●´ω｀●)',
+    ' (◠‿◠✿)',
+    ' (✿ ♡‿♡)',
+    ' (❁´◡`❁)',
+    ' (　\'◟ \')',
+    ' (人◕ω◕)',
+    ' (；ω；)',
+    ' (｀へ´)',
+    ' ._.',
+    ' :3',
+    ' :D',
+    ' :P',
+    ' ;-;',
+    ' ;3',
+    ' ;_;',
+    ' <{^v^}>',
+    ' >_<',
+    ' >_>',
+    ' UwU',
+    ' XDDD',
+    ' ^-^',
+    ' ^_^',
+    ' x3',
+    ' x3',
+    ' xD',
+    ' ÙωÙ',
+    ' ʕʘ‿ʘʔ',
+    ' ㅇㅅㅇ',
+    ' （＾ｖ＾）'
+]
+
+substitutions = {
+    'r': 'w',
+    'l': 'w',
+    'R': 'W',
+    'L': 'W',
+    'no': 'nyo',
+    'No': 'Nyo',
+    'has': 'haz',
+    'have': 'haz',
+    'you': 'uu',
+    'the ': 'da ',
+    'The ': 'Da ',
+    'THE ': 'DA '
+}
+
+# the following code is 100% stolen from @DerpyChap on GitHub with no shame
+# https://github.com/DerpyChap/owotext/blob/master/owotext/owo.py
+class OwO:
+    # noinspection PyDefaultArgument
+    def __init__(self, _suffixes=suffixes, _substitutions=substitutions):
+        self.suffixes = _suffixes
+        self.substitutions = _substitutions
+
+    def whatsthis(self, text: str):
+        """
+        UwU Convewts da specified stwing into OwO speak ʕʘ‿ʘʔ
+        :param text: Huohhhh. Da text uu want to convewt..
+        :return: OWO Da convewted stwing (人◕ω◕)
+        """
+        text = self.translate(text)
+        if self.suffixes:
+            text = (text + " " + choice(self.suffixes))
+        return text
+
+    def translate(self, text: str):
+        """
+        Convewts da specified stwing into OwO speak, without a pwefix ow suffix
+        :param text: Da text uu want to convewt
+        :return: Da convewted stwing
+        """
+        for key, value in self.substitutions.items():
+            text = text.replace(key, value)
+        return text
+
+o = OwO()
 
 @bot.command()
 async def ping(ctx):
@@ -233,6 +322,41 @@ async def roll(ctx, arg1="1", arg2="100"):
         await ctx.send(f"Woah {author}, your rolls are too powerful")
     else:
         await ctx.send(message)
+
+@bot.command(pass_context=True)
+async def uwu(ctx, arg1=""):
+    """
+    uwu-ize either the comment directly above (no argument), a body
+    of text (argument is text), or a link to a message (argument is a url)
+    """
+    await ctx.message.add_reaction('😽')
+    author = ctx.message.author.mention  # use mention string to avoid pinging other people
+    argIsText = False
+    channel = ctx.channel
+    message = ""
+    if(arg1 != ""):
+        msg_id = arg1
+        if(msg_id.isnumeric()):
+            # arg1 is a direct message ID
+            msg_id = int(arg1)
+        elif(arg1.find('/') != -1):
+            # arg1 is a link to a message
+            msg_id = int(arg1.rsplit('/', 1)[1])
+        else:
+            argIsText = True
+
+        if(not argIsText):
+            message = await channel.fetch_message(msg_id)
+            message = message.content
+        else:
+            # arg1 is original text that wants to be uwu-ized
+            message = ctx.message.content.split(' ', 1)[1]
+    else:
+        # arg1 is nothing (grab the previous message)
+        message = await channel.history(limit=2).flatten()
+        message = message[1].content
+
+    await ctx.send(o.whatsthis(message))
 
 def get_server_uptime():
     """
