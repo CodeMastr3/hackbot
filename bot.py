@@ -327,6 +327,10 @@ async def roll(ctx, arg1="1", arg2="100"):
         await ctx.send(message)
 
 @bot.command(pass_context=True)
+async def owo(ctx, arg1=""):
+    await uwu(ctx, arg1)
+
+@bot.command(pass_context=True)
 async def uwu(ctx, arg1=""):
     """
     uwu-ize either the comment directly above (no argument), a body
