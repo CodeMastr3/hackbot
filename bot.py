@@ -329,7 +329,7 @@ async def roll(ctx, arg1="1", arg2="100"):
 @bot.command(pass_context=True)
 async def owo(ctx, arg1=""):
     """
-    !OwO Convewts da specified stwing into OwO speak ʕʘ‿ʘʔ
+    !owo Convewts da specified stwing into OwO speak ʕʘ‿ʘʔ
 
     uwusage: !owo Hello sir. Have you heard of our lord and savior Jesus Christ?
     returns: Hewwo siw. Have uu heawd of ouw wowd and saviow Jesus Chwist? (人◕ω◕)
@@ -349,7 +349,7 @@ async def owo(ctx, arg1=""):
 @bot.command(pass_context=True)
 async def uwu(ctx, arg1=""):
     """
-    !UwU Convewts da specified stwing into OwO speak ʕʘ‿ʘʔ
+    !uwu Convewts da specified stwing into OwO speak ʕʘ‿ʘʔ
 
     uwusage: !uwu Hello sir. Have you heard of our lord and savior Jesus Christ?
     returns: Hewwo siw. Have uu heawd of ouw wowd and saviow Jesus Chwist? (人◕ω◕)
