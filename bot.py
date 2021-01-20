@@ -37,7 +37,7 @@ bot = commands.Bot(command_prefix='!')
 
 #variables needed for !uwu
 #I mean what else would it be for?
-suffixes = [
+json_db['uwu_suffixes'] = [
     ' ( ͡° ᴥ ͡°)',
     ' (´・ω・｀)',
     ' (ʘᗩʘ\')',
@@ -77,7 +77,7 @@ suffixes = [
     ' （＾ｖ＾）'
 ]
 
-substitutions = {
+json_db['uwu_substitutions'] = {
     'r': 'w',
     'l': 'w',
     'R': 'W',
@@ -92,11 +92,15 @@ substitutions = {
     'THE ': 'DA '
 }
 
+#Write to FS
+with open(json_file, 'w') as f:
+    json.dump(json_db, f)
+
 # the following code is 100% stolen from @DerpyChap on GitHub with no shame
 # https://github.com/DerpyChap/owotext/blob/master/owotext/owo.py
 class OwO:
     # noinspection PyDefaultArgument
-    def __init__(self, _suffixes=suffixes, _substitutions=substitutions):
+    def __init__(self, _suffixes=json_db['uwu_suffixes'], _substitutions=json_db['uwu_substitutions']):
         self.suffixes = _suffixes
         self.substitutions = _substitutions
 
