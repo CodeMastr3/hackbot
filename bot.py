@@ -577,7 +577,7 @@ async def add(ctx, *args):
         msg += f"You were already in the role(s): {''.join(r_had)}\n"
     if r_fail:
         msg += f"I have failed to add the role(s): {''.join(r_fail)}\n"
-    if r_had or r_fail:
+    if r_fail:
         msg += "Please use !serverroles to check available roles and spelling\n"
 
     #Message back to user
