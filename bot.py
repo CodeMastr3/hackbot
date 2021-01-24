@@ -572,11 +572,11 @@ async def add(ctx, *args):
 
     msg = ""
     if r_success:
-        msg += f"I have succesfully added the role(s): {''.join(r_success)}\n"
+        msg += f"I have succesfully added the role(s): {' '.join(r_success)}\n"
     if r_had:
-        msg += f"You were already in the role(s): {''.join(r_had)}\n"
+        msg += f"You were already in the role(s): {' '.join(r_had)}\n"
     if r_fail:
-        msg += f"I have failed to add the role(s): {''.join(r_fail)}\n"
+        msg += f"I have failed to add the role(s): {' '.join(r_fail)}\n"
     if r_fail:
         msg += "Please use !serverroles to check available roles and spelling\n"
 
@@ -609,11 +609,11 @@ async def sub(ctx, *args):
 
     msg = ""
     if r_success:
-        msg += f"I have succesfully removed the role(s): {''.join(r_success)}\n"
+        msg += f"I have succesfully removed the role(s): {' '.join(r_success)}\n"
     if r_had:
-        msg += f"You were not in the role(s): {''.join(r_had)}\n"
+        msg += f"You were not in the role(s): {' '.join(r_had)}\n"
     if r_fail:
-        msg += f"I have failed to remove the role(s): {''.join(r_fail)}\n"
+        msg += f"I have failed to remove the role(s): {' '.join(r_fail)}\n"
     if r_had or r_fail:
         msg += "Please use !myroles to double check roles you are in and spelling\n"
 
