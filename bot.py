@@ -491,65 +491,6 @@ async def logout_error(ctx, error):
     await ctx.channel.send("You don't have the permission to run that command")
 
 
-@bot.command(pass_context=True)
-async def sub(ctx, *args):
-    """
-    Subtracts any roles mentioned after sub if they exist say all for all possible roles to remove
-    """
-    member = ctx.author
-    for arg in args:
-        if (arg == "all"):
-            roles = ctx.guild.roles
-            iterroles = iter(roles)
-            next(iterroles)
-            for role in iterroles:
-                if role.name == "hackbot 1.1":
-                    break
-                else:
-                    await member.remove_roles(role)
-            break
-        else:
-            role = discord.utils.get(ctx.guild.roles, name=arg)
-            await member.remove_roles(role)
-    await ctx.send(f"I\'ve removed your requested roles {member.mention}!")
-
-
-@sub.error
-async def sub_error(ctx, error):
-    await ctx.channel.send(
-        "You have probably typed a role that doesn't exist please make sure that isn't the case and try again"
-    )
-
-
-@bot.command(pass_context=True)
-async def add(ctx, *args):
-    """
-    Adds any roles mentioned after add if they exist say all for all roles possible to add
-    """
-    member = ctx.author
-    for arg in args:
-        if (arg == "all"):
-            roles = ctx.guild.roles
-            iterroles = iter(roles)
-            next(iterroles)
-            for role in iterroles:
-                if role.name == "hackbot 1.1":
-                    break
-                else:
-                    await member.add_roles(role)
-            break
-        else:
-            role = discord.utils.get(ctx.guild.roles, name=arg)
-            await member.add_roles(role)
-    await ctx.send(f"I've added your new roles {member.mention}!")
-
-
-@add.error
-async def add_error(ctx, error):
-    await ctx.channel.send(
-        "You have probably typed a role that doesn't exist please make sure that isn't the case and try again"
-    )
-
 
 async def manage_reactions(payload, added: bool):
     if not payload.message_id in watched_message:
@@ -592,6 +533,92 @@ async def on_raw_reaction_add(payload):
 async def on_raw_reaction_remove(payload):
     await manage_reactions(payload, False)
 
+#Role Commands for the bot
+
+#Checks if the user has a role
+def has_role(ctx, role):
+    """
+    Checks if the user previously had the role
+    """
+    member = ctx.author
+    roles = [i.name for i in list(member.roles)]
+    return role.name in roles
+
+#Add roles for a user
+@bot.command(pass_context=True)
+async def add(ctx, *args):
+    """
+    Adds any roles mentioned after add if they exist say all for all roles possible to add
+    One or many roles may be requested at a single time
+    e.g. !add role1 role2 role3
+    """
+    r_success = []
+    r_fail = []
+    r_had = []
+    member = ctx.author
+
+    #Attempt to add users roles
+    for arg in args:
+        role = discord.utils.get(ctx.guild.roles, name=arg)
+        try:
+            #Check if user already had role
+            if not has_role(ctx, role):
+                await member.add_roles(role)
+                r_success += [arg]
+            else:
+                r_had += [arg]
+        except:
+            r_fail += [arg]
+
+    msg = ""
+    if r_success:
+        msg += f"I have succesfully added the role(s): {''.join(r_success)}\n"
+    if r_had:
+        msg += f"You were already in the role(s): {''.join(r_had)}\n"
+    if r_fail:
+        msg += f"I have failed to add the role(s): {''.join(r_fail)}\n"
+    if r_fail:
+        msg += "Please use !serverroles to check available roles and spelling\n"
+
+    #Message back to user
+    await ctx.send(f"{member.mention}:\n{msg}")
+
+#Sub roles for a user
+@bot.command(pass_context=True)
+async def sub(ctx, *args):
+    """
+    Subtracts any roles mentioned after sub if they exist say all for all possible roles to remove
+    One or many roles may be requested at a single time
+    e.g. !sub role1 role2 role3
+    """
+    r_success = []
+    r_fail = []
+    r_had = []
+    member = ctx.author
+    for arg in args:
+        role = discord.utils.get(ctx.guild.roles, name=arg)
+        try:
+            #Check if user didn't already have role
+            if has_role(ctx, role):
+                await member.remove_roles(role)
+                r_success += [arg]
+            else:
+                r_had += [arg]
+        except:
+            r_fail += [arg]
+
+    msg = ""
+    if r_success:
+        msg += f"I have succesfully removed the role(s): {''.join(r_success)}\n"
+    if r_had:
+        msg += f"You were not in the role(s): {''.join(r_had)}\n"
+    if r_fail:
+        msg += f"I have failed to remove the role(s): {''.join(r_fail)}\n"
+    if r_had or r_fail:
+        msg += "Please use !myroles to double check roles you are in and spelling\n"
+
+    #Message back to user
+    await ctx.send(f"{member.mention}:\n{msg}")
 
 #bot.run(os.getenv('TOKEN'))
 bot.run(token.stringToken())
