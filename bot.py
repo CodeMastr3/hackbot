@@ -521,10 +521,10 @@ async def manage_reactions(payload, added: bool):
 
 @bot.event
 async def on_member_join(member):
-    botChannel = member.guild.get(member.guild.channels, name='bot-stuff')
-    rulesChannel = member.guild.get(member.guild.channels, name='rules-and-info')
+    botChannel = discord.utils.get(member.guild.channels, name='bot-stuff')
+    rulesChannel = discord.utils.get(member.guild.channels, name='rules-and-info')
     await botChannel.send((
-        f'Welcome to the server {member.mention}!\nPlease check out {rulesChannel.mention}!\nIn order to view channels you need to add the relevant roles.\
+        f'Welcome to the server {member.mention}!\nPlease check out {rulesChannel.mention}!\nIn order to view channels you need to add the relevant roles.\n\
         Type !help for help, !serverroles for the roles you can add yourself to, !add "role1" "role2" to put yourself in that course.'
     ))
 
