@@ -34,12 +34,11 @@ except:
     pass
 
 # Bot Setup -- Attempt to set up greeting. If it fails, then go without it
+intents = discord.Intents(messages=True, guilds=True)
 try:
-    intents = discord.Intents(messages=True)
     intents.members = True
     bot = commands.Bot(command_prefix='!', intents=intents)
 except:
-    intents = discord.Intents(messages=True)
     bot = commands.Bot(command_prefix='!', intents=intents)
 
 #variables needed for !uwu
@@ -522,9 +521,8 @@ async def manage_reactions(payload, added: bool):
 
 @bot.event
 async def on_member_join(member):
-    botChannel = discord.utils.get(member.guild.channels, name='bot-stuff')
-    rulesChannel = discord.utils.get(member.guild.channels,
-                                     name='rules-and-info')
+    botChannel = member.guild.get(member.guild.channels, name='bot-stuff')
+    rulesChannel = member.guild.get(member.guild.channels, name='rules-and-info')
     await botChannel.send((
         f'Welcome to the server {member.mention}!\nPlease check out {rulesChannel.mention}!\nIn order to view channels you need to add the relevant roles.\
         Type !help for help, !serverroles for the roles you can add yourself to, !add "role1" "role2" to put yourself in that course.'
