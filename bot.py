@@ -33,7 +33,14 @@ try:
 except:
     pass
 
-bot = commands.Bot(command_prefix='!')
+# Bot Setup -- Attempt to set up greeting. If it fails, then go without it
+try:
+    intents = discord.Intents()
+    intents.members = True
+    bot = commands.Bot(command_prefix='!', intents=intents)
+except:
+    intents = discord.Intents()
+    bot = commands.Bot(command_prefix='!', intents=intents)
 
 #variables needed for !uwu
 #I mean what else would it be for?
