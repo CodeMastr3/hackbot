@@ -237,19 +237,18 @@ async def myroles(ctx):
 @bot.command()
 async def serverroles(ctx):
     """
-    Lists roles of the server
+    Lists the roles that this bot can add you to
+    To add any role(s) to yourself, please view !add and !sub
     """
-    s = ""
-    roles = ctx.guild.roles
-    iterroles = iter(roles)
-    next(iterroles)
-    for role in iterroles:
-        if role.name == "hackbot 1.1":
+    validRoles = []
+    roles = ctx.guild.roles[1:] #Strip @everyone
+    stopRole = bot.user.name #Everything below bot's name's role is ommitted
+    bs = "\n" #bs stands for "Backslash" but it's bs i can't do a \n in {} for f-strings
+    for role in roles:
+        if role.name == stopRole:
             break
-        else:
-            s += role.name
-            s += "\n"
-    await ctx.send('Servers roles:\n%s' % s)
+        validRoles += [role.name]
+    await ctx.send(f"Server's Roles:{bs}{bs}{bs.join(validRoles[::-1])}")
 
 
 """
