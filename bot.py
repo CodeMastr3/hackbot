@@ -240,7 +240,7 @@ async def serverroles(ctx):
     Lists the roles that this bot can add you to
     To add any role(s) to yourself, please view !add and !sub
     """
-    roles = bot_roles(ctx)
+    roles = bot_roles(ctx, ignore_preamble=False)
     bs = "\n" #bs stands for "Backslash" but it's bs i can't do a \n in {} for f-strings
     await ctx.send(f"Server's Roles:{bs}{bs}{bs.join([i.name for i in roles])}")
 
@@ -543,14 +543,14 @@ def has_role(ctx, role):
     return role.name in roles
 
 #Gets all the roles the bot can configure
-def bot_roles(ctx):
+def bot_roles(ctx, ignore_preamble=True):
     validRoles = []
     roles = ctx.guild.roles[1:] #Strip @everyone
     stopRole = bot.user.name #Everything below bot's name's role is ommitted
     for role in roles:
         if role.name == stopRole:
             break
-        if not role.name.startswith("|---"): #Preamble for organization
+        if not ignore_preamble or not role.name.startswith("|---"): #Preamble for organization
             validRoles += [role]
     return validRoles[::-1]
 
@@ -624,7 +624,7 @@ async def sub(ctx, *args):
     member = ctx.author
     br = bot_roles(ctx)
     if "all" in args:
-        for role in bot_roles(ctx):
+        for role in br:
             if has_role(ctx, role):
                 try:
                     await member.remove_roles(role)
