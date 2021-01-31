@@ -92,7 +92,7 @@ json_db['uwu_substitutions'] = {
     'fuck' : 'henck',
     'bitch' : 'very nice lady',
     'shait' : 'poot',
-    'ass ' : 'fluffy tail ',
+    ' ass ' : ' fluffy tail ',
     'kill' : 'nuzzle',
     'jesus christ' : 'cheese and rice',
     'degenewates' : 'cutie pies',
