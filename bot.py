@@ -38,10 +38,7 @@ bot = commands.Bot(command_prefix='!')
 #variables needed for !uwu
 #I mean what else would it be for?
 json_db['uwu_suffixes'] = [
-    ' ( ͡° ᴥ ͡°)',
     ' (´・ω・｀)',
-    ' (ʘᗩʘ\')',
-    ' (இωஇ )',
     ' (๑•́ ₃ •̀๑)',
     ' (• o •)',
     ' (⁎˃ᆺ˂)',
@@ -49,32 +46,27 @@ json_db['uwu_suffixes'] = [
     ' (●´ω｀●)',
     ' (◠‿◠✿)',
     ' (✿ ♡‿♡)',
-    ' (❁´◡`❁)',
+    ' (❁´◡\`❁)',
     ' (　\'◟ \')',
-    ' (人◕ω◕)',
     ' (；ω；)',
-    ' (｀へ´)',
-    ' ._.',
+    ' (´･ω･\`)',
+    ' o3o'
     ' :3',
     ' :D',
     ' :P',
-    ' ;-;',
-    ' ;3',
-    ' ;_;',
+    ' ;\_;',
     ' <{^v^}>',
-    ' >_<',
-    ' >_>',
+    ' >\_<',
     ' UwU',
-    ' XDDD',
     ' ^-^',
-    ' ^_^',
-    ' x3',
-    ' x3',
     ' xD',
     ' ÙωÙ',
-    ' ʕʘ‿ʘʔ',
     ' ㅇㅅㅇ',
     ' （＾ｖ＾）'
+    ' \*kisses you and licks your neck\*',
+    ' \*nuzzles your necky wecky\*',
+    ' \*pounces on you\*',
+    ' \*wags tails\*',
 ]
 
 json_db['uwu_substitutions'] = {
@@ -82,14 +74,42 @@ json_db['uwu_substitutions'] = {
     'l': 'w',
     'R': 'W',
     'L': 'W',
-    'no': 'nyo',
-    'No': 'Nyo',
-    'has': 'haz',
-    'have': 'haz',
-    'you': 'uu',
     'the ': 'da ',
     'The ': 'Da ',
-    'THE ': 'DA '
+    'THE ': 'DA ',
+    'th': 'd',
+    'Th': 'D',
+    'TH': 'D',
+    'no': 'nyo',
+    'No': 'Nyo',
+    'hi': 'hai',
+    'Hi': 'Hai',
+    'has': 'haz',
+    'have': 'haz',
+    'is': 'iws',
+
+    # some words have already been uwu-ized
+    'fuck' : 'henck',
+    'bitch' : 'very nice lady',
+    'shait' : 'poot',
+    'ass ' : 'fluffy tail ',
+    'kill' : 'nuzzle',
+    'jesus christ' : 'cheese and rice',
+    'degenewates' : 'cutie pies',
+    'degenewate' : 'cutie pie',
+    'diwsgusting' : 'bulgy wulgy',
+    'gwossest' : 'bulgiest',
+    'gwoss' : 'AMAZEBALLS (✿ ♡‿♡)',
+    'hand' : 'paw',
+
+    # compounding uwu-ness
+    'uwu' : 'uwuwuwu',
+    'owo' : 'owowowo',
+    'you ' : 'uwu ',
+    'dude': 'duwude',
+    'to' : 'towo',
+    'do ' : 'dowo ',
+    'bro' : 'browo',
 }
 
 #Write to FS
@@ -123,6 +143,15 @@ class OwO:
         """
         for key, value in self.substitutions.items():
             text = text.replace(key, value)
+        i = 0
+        while i < len(text):
+            if(text[i] == '.'):
+                if(randint(0, 5) == 0):
+                    seed(i) # random is not very random apparently
+                    randSuffix = self.suffixes[randint(0, len(self.suffixes)-1)]
+                    text = text[:i] + randSuffix + text[i + 1:]
+            i += 1
+
         return text
 
 o = OwO()
@@ -390,7 +419,10 @@ async def uwu(ctx, arg1=""):
         message = await channel.history(limit=2).flatten()
         message = message[1].content
 
-    await ctx.send(o.whatsthis(message))
+    message = o.whatsthis(message)
+    if(len(message) > 2000):
+      message = "OWO youw message is too bulgy wulgy fow me to send"
+    await ctx.send(message)
 
 def get_server_uptime():
     """
