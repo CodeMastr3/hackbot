@@ -50,7 +50,7 @@ json_db['uwu_suffixes'] = [
     ' (　\'◟ \')',
     ' (；ω；)',
     ' (´･ω･\`)',
-    ' o3o'
+    ' o3o',
     ' :3',
     ' :D',
     ' :P',
@@ -62,7 +62,7 @@ json_db['uwu_suffixes'] = [
     ' xD',
     ' ÙωÙ',
     ' ㅇㅅㅇ',
-    ' （＾ｖ＾）'
+    ' （＾ｖ＾）',
     ' \*kisses you and licks your neck\*',
     ' \*nuzzles your necky wecky\*',
     ' \*pounces on you\*',
@@ -72,34 +72,28 @@ json_db['uwu_suffixes'] = [
 json_db['uwu_substitutions'] = {
     'r': 'w',
     'l': 'w',
-    'R': 'W',
-    'L': 'W',
     'the ': 'da ',
-    'The ': 'Da ',
-    'THE ': 'DA ',
     'th': 'd',
-    'Th': 'D',
-    'TH': 'D',
     'no': 'nyo',
-    'No': 'Nyo',
     'hi': 'hai',
-    'Hi': 'Hai',
     'has': 'haz',
     'have': 'haz',
     'is': 'iws',
 
     # some words have already been uwu-ized
     'fuck' : 'henck',
-    'bitch' : 'very nice lady',
+    'bitch' : 'vewwy nice lady',
     'shait' : 'poot',
-    ' ass ' : ' fluffy tail ',
+    ' ass ' : ' fwuffey tail ',
     'kill' : 'nuzzle',
-    'jesus christ' : 'cheese and rice',
+    'god' : 'sonic',
+    'jesus christ' : 'cheese and wice',
     'degenewates' : 'cutie pies',
     'degenewate' : 'cutie pie',
     'diwsgusting' : 'bulgy wulgy',
     'gwossest' : 'bulgiest',
     'gwoss' : 'AMAZEBALLS (✿ ♡‿♡)',
+    'nasty' : 'musky',
     'hand' : 'paw',
 
     # compounding uwu-ness
@@ -145,7 +139,8 @@ class OwO:
             text = text.replace(key, value)
         i = 0
         while i < len(text):
-            if(text[i] == '.'):
+            # occasionally convert end of sentance punctuation into a uwu suffix
+            if(text[i] == '.' or text[i] == '?' or text[i] == '!'):
                 if(randint(0, 5) == 0):
                     seed(i) # random is not very random apparently
                     randSuffix = self.suffixes[randint(0, len(self.suffixes)-1)]
@@ -400,11 +395,22 @@ async def uwu(ctx, arg1=""):
     if(arg1 != ""):
         msg_id = arg1
         if(msg_id.isnumeric()):
-            # arg1 is a direct message ID
+            # arg1 is a message ID
             msg_id = int(arg1)
+        elif(arg1.find('-') != -1):
+            text = arg1.rsplit('-', 1)[1]
+            if(text.isnumeric()):
+                # arg1 is a message ID in the form of <channelID>-<messageID>
+                msg_id = int(text)
+            else:
+                argIsText = True
         elif(arg1.find('/') != -1):
-            # arg1 is a link to a message
-            msg_id = int(arg1.rsplit('/', 1)[1])
+            text = arg1.rsplit('/', 1)[1]
+            if(text.isnumeric()):
+                # arg1 is a link to a message
+                msg_id = int(text)
+            else:
+                argIsText = True
         else:
             argIsText = True
 
@@ -419,7 +425,7 @@ async def uwu(ctx, arg1=""):
         message = await channel.history(limit=2).flatten()
         message = message[1].content
 
-    message = o.whatsthis(message)
+    message = o.whatsthis(message.lower())
     if(len(message) > 2000):
       message = "OWO youw message is too bulgy wulgy fow me to send"
     await ctx.send(message)
