@@ -518,8 +518,11 @@ async def manage_reactions(payload, added: bool):
 async def on_member_join(member):
     botChannel = discord.utils.get(member.guild.channels, name='bot-stuff')
     rulesChannel = discord.utils.get(member.guild.channels, name='rules-and-info')
-    role = discord.utils.get(member.guild.roles, name=announcementChanName)
-    await member.add_roles(role)
+    try:
+        role = discord.utils.get(member.guild.roles, name=announcementChanName)
+        await member.add_roles(role)
+    except:
+        pass
     await botChannel.send(f"""Welcome to the server {member.mention}!\nPlease check out {rulesChannel.mention}!\nIn order to view channels you need to add the relevant roles.\nType `!help` for help, `!serverroles` for the roles you can add yourself to, `!add role1 role2` to put yourself in that course.\nYou have already been added to the {announcementChanName} role, so that you can keep update on any events that might be happening and things you might want to be aware of. Feel free to remove yourself from this role by saying `!sub {announcementChanName}` in {botChannel.mention}""")
 
 
