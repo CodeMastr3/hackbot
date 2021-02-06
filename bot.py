@@ -20,6 +20,8 @@ seed(datetime.now())
 start_time = time.time()
 # load_dotenv('.env')
 
+announcementChanName = "Announcement"
+
 #Load json data
 json_file = "db.json"
 json_db = {}
@@ -240,7 +242,7 @@ async def serverroles(ctx):
     Lists the roles that this bot can add you to
     To add any role(s) to yourself, please view !add and !sub
     """
-    roles = bot_roles(ctx)
+    roles = bot_roles(ctx, ignore_preamble=False)
     bs = "\n" #bs stands for "Backslash" but it's bs i can't do a \n in {} for f-strings
     await ctx.send(f"Server's Roles:{bs}{bs}{bs.join([i.name for i in roles])}")
 
@@ -516,10 +518,12 @@ async def manage_reactions(payload, added: bool):
 async def on_member_join(member):
     botChannel = discord.utils.get(member.guild.channels, name='bot-stuff')
     rulesChannel = discord.utils.get(member.guild.channels, name='rules-and-info')
-    await botChannel.send((
-        f'Welcome to the server {member.mention}!\nPlease check out {rulesChannel.mention}!\nIn order to view channels you need to add the relevant roles.\n\
-        Type !help for help, !serverroles for the roles you can add yourself to, !add "role1" "role2" to put yourself in that course.'
-    ))
+    try:
+        role = discord.utils.get(member.guild.roles, name=announcementChanName)
+        await member.add_roles(role)
+    except:
+        pass
+    await botChannel.send(f"""Welcome to the server {member.mention}!\nPlease check out {rulesChannel.mention}!\nIn order to view channels you need to add the relevant roles.\nType `!help` for help, `!serverroles` for the roles you can add yourself to, `!add role1 role2` to put yourself in that course.\nYou have already been added to the {announcementChanName} role, so that you can keep update on any events that might be happening and things you might want to be aware of. Feel free to remove yourself from this role by saying `!sub {announcementChanName}` in {botChannel.mention}""")
 
 
 @bot.event
@@ -543,14 +547,14 @@ def has_role(ctx, role):
     return role.name in roles
 
 #Gets all the roles the bot can configure
-def bot_roles(ctx):
+def bot_roles(ctx, ignore_preamble=True):
     validRoles = []
     roles = ctx.guild.roles[1:] #Strip @everyone
     stopRole = bot.user.name #Everything below bot's name's role is ommitted
     for role in roles:
         if role.name == stopRole:
             break
-        if not role.name.startswith("|---"): #Preamble for organization
+        if not ignore_preamble or not role.name.startswith("|---"): #Preamble for organization
             validRoles += [role]
     return validRoles[::-1]
 
@@ -624,7 +628,7 @@ async def sub(ctx, *args):
     member = ctx.author
     br = bot_roles(ctx)
     if "all" in args:
-        for role in bot_roles(ctx):
+        for role in br:
             if has_role(ctx, role):
                 try:
                     await member.remove_roles(role)
@@ -663,6 +667,54 @@ async def sub(ctx, *args):
 
     #Message back to user
     await ctx.send(f"{member.mention}:\n{msg}")
+
+import math
+
+@bot.command()
+@commands.has_any_role('Mods')
+async def allAnnounce(ctx):
+    s = time.time()
+    failed = 0
+    #Time Per Role Aquisition
+    tpr = 0.7798744099480766
+
+    #Get Role
+    role = discord.utils.get(ctx.guild.roles, name=announcementChanName)
+    #Get members
+    members = ctx.guild.members
+
+    await ctx.send(f"Attempting to give {len(members)} the role `{role.name}`. This process should take roughly `{math.ceil(tpr * len(members))}` seconds")
+
+    #For each member, add role
+    for member in members:
+        try:
+           await member.add_roles(role)
+        except:
+            print(f"{member.name} failed")
+            failed += 1
+    e = time.time()
+    d = e-s
+    await ctx.send(f"Complete. Process took {d} seconds. Gave {len(members) - failed} members the role `{role.name}`. Failed to give role to {failed} members.")
+
+@bot.command()
+@commands.has_any_role('Mods')
+async def delAnnounce(ctx):
+    s = time.time()
+    failed = 0
+    #Get Role
+    role = discord.utils.get(ctx.guild.roles, name=announcementChanName)
+    #Get members
+    members = ctx.guild.members
+    #For each member, add role
+    for member in members:
+        try:
+           await member.remove_roles(role)
+        except:
+            print(f"{member.name} failed")
+            failed += 1
+    e = time.time()
+    d = e-s
+    await ctx.send(f"Complete. Process took {d} seconds. Removed {len(members) - failed} members from the role `{role.name}`. Failed to remove the role from {failed} members.")
 
 #bot.run(os.getenv('TOKEN'))
 bot.run(token.stringToken())
