@@ -537,7 +537,7 @@ async def on_member_join(member):
         yourself to, `!add role1 role2` to put yourself in that course."
     msg4 = " ".join(msg4.split())
     msg5 = f"You have already been added to the \
-        {announcementChanName} role, so that you can keep update on any events\
+        {announcementChanName} role, so that you can keep up to date on any events\
          that might be happening and things you might want to be aware of. \
          Feel free to remove yourself from this role by saying `!sub \
          {announcementChanName}` in {botChannel.mention}"
