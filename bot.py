@@ -5,7 +5,7 @@ import token1 as token
 import ast
 import requests
 import subprocess
-#import os
+import os
 import json
 
 import time
@@ -689,71 +689,15 @@ async def sub(ctx, *args):
     #Message back to user
     await ctx.send(f"{member.mention}:\n{msg}")
 
-import math
-
 @bot.command()
-@commands.has_any_role('Mods')
-async def allAnnounce(ctx):
-    s = time.time()
-    failed = 0
-    #Time Per Role Aquisition
-    tpr = 0.7798744099480766
-
-    #Get Role
-    role = discord.utils.get(ctx.guild.roles, name=announcementChanName)
-    #Get members
-    members = ctx.guild.members
-    msg = f"Attempting to give {len(members)} the role `{role.name}`.\
-     This process should take roughly `{math.ceil(tpr * len(members))}` seconds"
-    msg = " ".join(msg.split())
-
-    await ctx.send(msg)
-
-    #For each member, add role
-    for member in members:
-        if role in member.roles:
-            #print(f"{member.name} had the role skipping")
-            continue
-        else:
-            try:
-                await member.add_roles(role)
-            except:
-                print(f"{member.name} failed")
-                failed += 1
-    e = time.time()
-    d = e-s
-    msg = f"Complete. Process took {d} seconds. Gave \
-    {len(members) - failed} members the role `{role.name}`. \
-    Failed to give role to {failed} members."
-    msg = " ".join(msg.split())
-    await ctx.send(msg)
-
-@bot.command()
-@commands.has_any_role('Mods')
-async def delAnnounce(ctx):
-    s = time.time()
-    failed = 0
-    #Get Role
-    role = discord.utils.get(ctx.guild.roles, name=announcementChanName)
-    #Get members
-    members = ctx.guild.members
-    #For each member, add role
-    for member in members:
-        if role in member.roles:
-            try:
-                await member.remove_roles(role)
-            except:
-                print(f"{member.name} failed")
-                failed += 1
-        else:
-            #print(f"{member.name} didn't have role skipping")
-    e = time.time()
-    d = e-s
-    msg = f"Complete. Process took {d} seconds. Removed \
-    {len(members) - failed} members from the role `{role.name}`. \
-    Failed to remove the role from {failed} members."
-    msg = " ".join(msg.split())
-    await ctx.send(msg)
+@commands.has_any_role('Cody', 'Dallas')
+async def update(ctx):
+    update_script = "./update.sh"
+    if os.path.exists(update_script):
+        await ctx.send("Attempting to Update")
+        subprocess.run(["./update.sh"])
+    else:
+        await ctx.send("Update Script Not Found")
 
 #bot.run(os.getenv('TOKEN'))
 bot.run(token.stringToken())
