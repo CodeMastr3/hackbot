@@ -272,7 +272,8 @@ async def joined(ctx):
 @bot.command(pass_context=True)
 async def roll(ctx, arg1="1", arg2="100"):
     """
-    You can specify the amount of dice with a space or delimited with a 'd', else it will be 2 random nums between 1-6
+    You can specify the amount of dice with a space or delimited with a 'd', 
+    else it will be 2 random nums between 1-6
     """
     await ctx.message.add_reaction('\U0001F3B2')
     author = ctx.message.author.mention  # use mention string to avoid pinging other people
@@ -423,7 +424,8 @@ async def uptime(ctx):
     """
     current = time.time()
     delta = current - start_time
-    await ctx.send(f"Bot has been {pretty_print_uptime(delta)}\nServer has been {get_server_uptime()}")
+    await ctx.send(f"Bot has been {pretty_print_uptime(delta)}\nServer has \
+    been {get_server_uptime()}")
 
 @bot.command(hidden=True)
 @commands.has_any_role('Cody', 'Dallas')
@@ -442,7 +444,8 @@ async def escalate(ctx):
 def normalize_location(loc):
     """
     Used by vaccines command:
-    Will change a phrase like "uNITED sTATES" to "United States" since all location are stored as proper nouns
+    Will change a phrase like "uNITED sTATES" to "United States" since all 
+    location are stored as proper nouns
     """
     arr = [i.lower() for i in loc.split(' ')]
     arr = [
@@ -467,7 +470,8 @@ def gll(js, loc):
 @bot.command()
 async def vaccines(ctx, loc="United States"):
     """
-    Uses the information available at howmanyvaccinated.com to state how many people have been vaccinated based off location
+    Uses the information available at howmanyvaccinated.com to state how many
+    people have been vaccinated based off location
     Will default to United States
     """
     url = "https://www.howmanyvaccinated.com/vaccine"
@@ -481,7 +485,10 @@ async def vaccines(ctx, loc="United States"):
     if dat is not None:
         #Format the number with commas to make it easier to read
         tot = "{:,}".format(int(dat['total_vaccinations']))
-        msg = f"In {loc} as of {dat['date']}, there have been {tot} vaccinations, totalling {dat['total_vaccinations_per_hundred']}% of the population."
+        msg = f"In {loc} as of {dat['date']}, there have been {tot}\
+         vaccinations, totalling {dat['total_vaccinations_per_hundred']}% of\
+         the population."
+        msg = ' '.join(msg.split())
     else:
         msg = f"Unable to find information for {loc}"
     await ctx.send(msg)
@@ -523,7 +530,21 @@ async def on_member_join(member):
         await member.add_roles(role)
     except:
         pass
-    await botChannel.send(f"""Welcome to the server {member.mention}!\nPlease check out {rulesChannel.mention}!\nIn order to view channels you need to add the relevant roles.\nType `!help` for help, `!serverroles` for the roles you can add yourself to, `!add role1 role2` to put yourself in that course.\nYou have already been added to the {announcementChanName} role, so that you can keep update on any events that might be happening and things you might want to be aware of. Feel free to remove yourself from this role by saying `!sub {announcementChanName}` in {botChannel.mention}""")
+    msg1 = f"Welcome to the server {member.mention}!"
+    msg2 = f"Please check out {rulesChannel.mention}!"
+    msg3 = "In order to view channels you need to add the relevant roles."
+    msg4 = "Type `!help` for help, `!serverroles` for the roles you can add \
+        yourself to, `!add role1 role2` to put yourself in that course."
+    msg4 = " ".join(msg4.split())
+    msg5 = f"You have already been added to the \
+        {announcementChanName} role, so that you can keep update on any events\
+         that might be happening and things you might want to be aware of. \
+         Feel free to remove yourself from this role by saying `!sub \
+         {announcementChanName}` in {botChannel.mention}"
+    msg5 = " ".join(msg5.split())
+    msgList = [msg1, msg2, msg3, msg4, msg5]
+    msg = "\n".join(msgList)
+    await botChannel.send(msg)
 
 
 @bot.event
@@ -682,19 +703,30 @@ async def allAnnounce(ctx):
     role = discord.utils.get(ctx.guild.roles, name=announcementChanName)
     #Get members
     members = ctx.guild.members
+    msg = f"Attempting to give {len(members)} the role `{role.name}`.\
+     This process should take roughly `{math.ceil(tpr * len(members))}` seconds"
+    msg = " ".join(msg.split())
 
-    await ctx.send(f"Attempting to give {len(members)} the role `{role.name}`. This process should take roughly `{math.ceil(tpr * len(members))}` seconds")
+    await ctx.send(msg)
 
     #For each member, add role
     for member in members:
-        try:
-           await member.add_roles(role)
-        except:
-            print(f"{member.name} failed")
-            failed += 1
+        if role in member.roles:
+            #print(f"{member.name} had the role skipping")
+            continue
+        else:
+            try:
+                await member.add_roles(role)
+            except:
+                print(f"{member.name} failed")
+                failed += 1
     e = time.time()
     d = e-s
-    await ctx.send(f"Complete. Process took {d} seconds. Gave {len(members) - failed} members the role `{role.name}`. Failed to give role to {failed} members.")
+    msg = f"Complete. Process took {d} seconds. Gave \
+    {len(members) - failed} members the role `{role.name}`. \
+    Failed to give role to {failed} members."
+    msg = " ".join(msg.split())
+    await ctx.send(msg)
 
 @bot.command()
 @commands.has_any_role('Mods')
@@ -707,14 +739,21 @@ async def delAnnounce(ctx):
     members = ctx.guild.members
     #For each member, add role
     for member in members:
-        try:
-           await member.remove_roles(role)
-        except:
-            print(f"{member.name} failed")
-            failed += 1
+        if role in member.roles:
+            try:
+                await member.remove_roles(role)
+            except:
+                print(f"{member.name} failed")
+                failed += 1
+        else:
+            #print(f"{member.name} didn't have role skipping")
     e = time.time()
     d = e-s
-    await ctx.send(f"Complete. Process took {d} seconds. Removed {len(members) - failed} members from the role `{role.name}`. Failed to remove the role from {failed} members.")
+    msg = f"Complete. Process took {d} seconds. Removed \
+    {len(members) - failed} members from the role `{role.name}`. \
+    Failed to remove the role from {failed} members."
+    msg = " ".join(msg.split())
+    await ctx.send(msg)
 
 #bot.run(os.getenv('TOKEN'))
 bot.run(token.stringToken())
