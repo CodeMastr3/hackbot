@@ -7,6 +7,7 @@ import requests
 import subprocess
 import os
 import json
+import re
 
 import time
 from datetime import datetime
@@ -46,10 +47,7 @@ except:
 #variables needed for !uwu
 #I mean what else would it be for?
 json_db['uwu_suffixes'] = [
-    ' ( ͡° ᴥ ͡°)',
     ' (´・ω・｀)',
-    ' (ʘᗩʘ\')',
-    ' (இωஇ )',
     ' (๑•́ ₃ •̀๑)',
     ' (• o •)',
     ' (⁎˃ᆺ˂)',
@@ -57,47 +55,65 @@ json_db['uwu_suffixes'] = [
     ' (●´ω｀●)',
     ' (◠‿◠✿)',
     ' (✿ ♡‿♡)',
-    ' (❁´◡`❁)',
+    ' (❁´◡\`❁)',
     ' (　\'◟ \')',
-    ' (人◕ω◕)',
     ' (；ω；)',
-    ' (｀へ´)',
-    ' ._.',
+    ' (´･ω･\`)',
+    ' o3o',
     ' :3',
     ' :D',
     ' :P',
-    ' ;-;',
-    ' ;3',
-    ' ;_;',
+    ' ;\_;',
     ' <{^v^}>',
-    ' >_<',
-    ' >_>',
+    ' >\_<',
     ' UwU',
-    ' XDDD',
     ' ^-^',
-    ' ^_^',
-    ' x3',
-    ' x3',
     ' xD',
     ' ÙωÙ',
-    ' ʕʘ‿ʘʔ',
     ' ㅇㅅㅇ',
-    ' （＾ｖ＾）'
+    ' （＾ｖ＾）',
+    ' \*starts howling\*',
+    ' \*leaps up and down\*',
+    ' \*wags tails\*',
 ]
 
 json_db['uwu_substitutions'] = {
     'r': 'w',
     'l': 'w',
-    'R': 'W',
-    'L': 'W',
+    'the ': 'da ',
+    'th': 'd',
     'no': 'nyo',
-    'No': 'Nyo',
+    'hi': 'hai',
     'has': 'haz',
     'have': 'haz',
-    'you': 'uu',
-    'the ': 'da ',
-    'The ': 'Da ',
-    'THE ': 'DA '
+    'is': 'iws',
+
+    # some words have already been uwu-ized
+    'fuck' : 'henck',
+    'bitch' : 'vewwy nice lady',
+    'shait' : 'poot',
+    ' ass ' : ' fwuffey tail ',
+    'kill' : 'nuzzle',
+    'god' : 'sonic',
+    'jesus christ' : 'cheese and wice',
+    'degenewates' : 'cutie pies',
+    'degenewate' : 'cutie pie',
+    'diwsgusting' : 'bulgy wulgy',
+    'gwossest' : 'bulgiest',
+    'gwoss' : 'AMAZEBALLS (✿ ♡‿♡)',
+    'nasty' : 'musky',
+    'hand' : 'paw',
+
+    # compounding uwu-ness
+    'uwu' : 'uwuwuwu',
+    'owo' : 'owowowo',
+    'you ' : 'uwu ',
+    'dude': 'duwude',
+    'to' : 'towo',
+    'oh' : 'owo',
+    'no' : 'nowo',
+    'do ' : 'dowo ',
+    'bro' : 'browo',
 }
 
 #Write to FS
@@ -129,8 +145,20 @@ class OwO:
         :param text: Da text uu want to convewt
         :return: Da convewted stwing
         """
+
+        text = re.sub(r'<a?:\S+:[0-9]+>\s?', '', text) # remove private server emojis
         for key, value in self.substitutions.items():
             text = text.replace(key, value)
+        i = 0
+        while i < len(text):
+            # occasionally convert end of sentance punctuation into a uwu suffix
+            if(text[i] == '.' or text[i] == '?' or text[i] == '!'):
+                if(randint(0, 5) == 0):
+                    seed(i) # random is not very random apparently
+                    randSuffix = self.suffixes[randint(0, len(self.suffixes)-1)]
+                    text = text[:i] + randSuffix + text[i + 1:]
+            i += 1
+
         return text
 
 o = OwO()
@@ -373,11 +401,22 @@ async def uwu(ctx, arg1=""):
     if(arg1 != ""):
         msg_id = arg1
         if(msg_id.isnumeric()):
-            # arg1 is a direct message ID
+            # arg1 is a message ID
             msg_id = int(arg1)
+        elif(arg1.find('-') != -1):
+            text = arg1.rsplit('-', 1)[1]
+            if(text.isnumeric()):
+                # arg1 is a message ID in the form of <channelID>-<messageID>
+                msg_id = int(text)
+            else:
+                argIsText = True
         elif(arg1.find('/') != -1):
-            # arg1 is a link to a message
-            msg_id = int(arg1.rsplit('/', 1)[1])
+            text = arg1.rsplit('/', 1)[1]
+            if(text.isnumeric()):
+                # arg1 is a link to a message
+                msg_id = int(text)
+            else:
+                argIsText = True
         else:
             argIsText = True
 
@@ -392,7 +431,10 @@ async def uwu(ctx, arg1=""):
         message = await channel.history(limit=2).flatten()
         message = message[1].content
 
-    await ctx.send(o.whatsthis(message))
+    message = o.whatsthis(message.lower())
+    if(len(message) > 2000):
+      message = "OWO youw message is too bulgy wulgy fow me to send"
+    await ctx.send(message)
 
 def get_server_uptime():
     """
