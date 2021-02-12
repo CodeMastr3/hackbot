@@ -5,7 +5,7 @@ import token1 as token
 import ast
 import requests
 import subprocess
-#import os
+import os
 import json
 import re
 
@@ -20,6 +20,8 @@ from discord.ext import commands
 seed(datetime.now())
 start_time = time.time()
 # load_dotenv('.env')
+
+announcementChanName = "Announcement"
 
 #Load json data
 json_file = "db.json"
@@ -269,7 +271,7 @@ async def serverroles(ctx):
     Lists the roles that this bot can add you to
     To add any role(s) to yourself, please view !add and !sub
     """
-    roles = bot_roles(ctx)
+    roles = bot_roles(ctx, ignore_preamble=False)
     bs = "\n" #bs stands for "Backslash" but it's bs i can't do a \n in {} for f-strings
     await ctx.send(f"Server's Roles:{bs}{bs}{bs.join([i.name for i in roles])}")
 
@@ -299,7 +301,8 @@ async def joined(ctx):
 @bot.command(pass_context=True)
 async def roll(ctx, arg1="1", arg2="100"):
     """
-    You can specify the amount of dice with a space or delimited with a 'd', else it will be 2 random nums between 1-6
+    You can specify the amount of dice with a space or delimited with a 'd', 
+    else it will be 2 random nums between 1-6
     """
     await ctx.message.add_reaction('\U0001F3B2')
     author = ctx.message.author.mention  # use mention string to avoid pinging other people
@@ -464,7 +467,8 @@ async def uptime(ctx):
     """
     current = time.time()
     delta = current - start_time
-    await ctx.send(f"Bot has been {pretty_print_uptime(delta)}\nServer has been {get_server_uptime()}")
+    await ctx.send(f"Bot has been {pretty_print_uptime(delta)}\nServer has \
+    been {get_server_uptime()}")
 
 @bot.command(hidden=True)
 @commands.has_any_role('Cody', 'Dallas')
@@ -483,7 +487,8 @@ async def escalate(ctx):
 def normalize_location(loc):
     """
     Used by vaccines command:
-    Will change a phrase like "uNITED sTATES" to "United States" since all location are stored as proper nouns
+    Will change a phrase like "uNITED sTATES" to "United States" since all 
+    location are stored as proper nouns
     """
     arr = [i.lower() for i in loc.split(' ')]
     arr = [
@@ -508,7 +513,8 @@ def gll(js, loc):
 @bot.command()
 async def vaccines(ctx, loc="United States"):
     """
-    Uses the information available at howmanyvaccinated.com to state how many people have been vaccinated based off location
+    Uses the information available at howmanyvaccinated.com to state how many
+    people have been vaccinated based off location
     Will default to United States
     """
     url = "https://www.howmanyvaccinated.com/vaccine"
@@ -522,7 +528,10 @@ async def vaccines(ctx, loc="United States"):
     if dat is not None:
         #Format the number with commas to make it easier to read
         tot = "{:,}".format(int(dat['total_vaccinations']))
-        msg = f"In {loc} as of {dat['date']}, there have been {tot} vaccinations, totalling {dat['total_vaccinations_per_hundred']}% of the population."
+        msg = f"In {loc} as of {dat['date']}, there have been {tot}\
+         vaccinations, totalling {dat['total_vaccinations_per_hundred']}% of\
+         the population."
+        msg = ' '.join(msg.split())
     else:
         msg = f"Unable to find information for {loc}"
     await ctx.send(msg)
@@ -559,10 +568,26 @@ async def manage_reactions(payload, added: bool):
 async def on_member_join(member):
     botChannel = discord.utils.get(member.guild.channels, name='bot-stuff')
     rulesChannel = discord.utils.get(member.guild.channels, name='rules-and-info')
-    await botChannel.send((
-        f'Welcome to the server {member.mention}!\nPlease check out {rulesChannel.mention}!\nIn order to view channels you need to add the relevant roles.\n\
-        Type !help for help, !serverroles for the roles you can add yourself to, !add "role1" "role2" to put yourself in that course.'
-    ))
+    try:
+        role = discord.utils.get(member.guild.roles, name=announcementChanName)
+        await member.add_roles(role)
+    except:
+        pass
+    msg1 = f"Welcome to the server {member.mention}!"
+    msg2 = f"Please check out {rulesChannel.mention}!"
+    msg3 = "In order to view channels you need to add the relevant roles."
+    msg4 = "Type `!help` for help, `!serverroles` for the roles you can add \
+        yourself to, `!add role1 role2` to put yourself in that course."
+    msg4 = " ".join(msg4.split())
+    msg5 = f"You have already been added to the \
+        {announcementChanName} role, so that you can keep up to date on any events\
+         that might be happening and things you might want to be aware of. \
+         Feel free to remove yourself from this role by saying `!sub \
+         {announcementChanName}` in {botChannel.mention}"
+    msg5 = " ".join(msg5.split())
+    msgList = [msg1, msg2, msg3, msg4, msg5]
+    msg = "\n".join(msgList)
+    await botChannel.send(msg)
 
 
 @bot.event
@@ -586,14 +611,14 @@ def has_role(ctx, role):
     return role.name in roles
 
 #Gets all the roles the bot can configure
-def bot_roles(ctx):
+def bot_roles(ctx, ignore_preamble=True):
     validRoles = []
     roles = ctx.guild.roles[1:] #Strip @everyone
     stopRole = bot.user.name #Everything below bot's name's role is ommitted
     for role in roles:
         if role.name == stopRole:
             break
-        if not role.name.startswith("|---"): #Preamble for organization
+        if not ignore_preamble or not role.name.startswith("|---"): #Preamble for organization
             validRoles += [role]
     return validRoles[::-1]
 
@@ -667,7 +692,7 @@ async def sub(ctx, *args):
     member = ctx.author
     br = bot_roles(ctx)
     if "all" in args:
-        for role in bot_roles(ctx):
+        for role in br:
             if has_role(ctx, role):
                 try:
                     await member.remove_roles(role)
@@ -706,6 +731,16 @@ async def sub(ctx, *args):
 
     #Message back to user
     await ctx.send(f"{member.mention}:\n{msg}")
+
+@bot.command()
+@commands.has_any_role('Cody', 'Dallas')
+async def update(ctx):
+    update_script = "./update.sh"
+    if os.path.exists(update_script):
+        await ctx.send("Attempting to Update")
+        subprocess.run(["./update.sh"])
+    else:
+        await ctx.send("Update Script Not Found")
 
 #bot.run(os.getenv('TOKEN'))
 bot.run(token.stringToken())
