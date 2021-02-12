@@ -74,7 +74,7 @@ json_db['uwu_suffixes'] = [
     ' （＾ｖ＾）',
     ' \*starts howling\*',
     ' \*leaps up and down\*',
-    ' \*wags tails\*',
+    ' \*wags tail\*',
 ]
 
 json_db['uwu_substitutions'] = {
@@ -82,7 +82,6 @@ json_db['uwu_substitutions'] = {
     'l': 'w',
     'the ': 'da ',
     'th': 'd',
-    'no': 'nyo',
     'hi': 'hai',
     'has': 'haz',
     'have': 'haz',
@@ -110,10 +109,9 @@ json_db['uwu_substitutions'] = {
     'you ' : 'uwu ',
     'dude': 'duwude',
     'to' : 'towo',
-    'oh' : 'owo',
     'no' : 'nowo',
+    'oh' : 'owo',
     'do ' : 'dowo ',
-    'bro' : 'browo',
 }
 
 #Write to FS
