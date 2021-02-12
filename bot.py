@@ -109,6 +109,7 @@ json_db['uwu_substitutions'] = {
     'you ' : 'uwu ',
     'dude': 'duwude',
     'to' : 'towo',
+    'oh' : 'owo',
     'no' : 'nowo',
     'do ' : 'dowo ',
     'bro' : 'browo',
