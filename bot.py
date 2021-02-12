@@ -72,9 +72,8 @@ json_db['uwu_suffixes'] = [
     ' ÙωÙ',
     ' ㅇㅅㅇ',
     ' （＾ｖ＾）',
-    ' \*kisses you and licks your neck\*',
-    ' \*nuzzles your necky wecky\*',
-    ' \*pounces on you\*',
+    ' \*starts howling\*',
+    ' \*leaps up and down\*',
     ' \*wags tails\*',
 ]
 
