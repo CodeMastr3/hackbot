@@ -7,6 +7,7 @@ import requests
 import subprocess
 #import os
 import json
+import re
 
 import time
 from datetime import datetime
@@ -108,6 +109,7 @@ json_db['uwu_substitutions'] = {
     'you ' : 'uwu ',
     'dude': 'duwude',
     'to' : 'towo',
+    'no' : 'nowo',
     'do ' : 'dowo ',
     'bro' : 'browo',
 }
@@ -141,6 +143,8 @@ class OwO:
         :param text: Da text uu want to convewt
         :return: Da convewted stwing
         """
+
+        text = re.sub(r'<a?:\S+:[0-9]+>\s?', '', text) # remove private server emojis
         for key, value in self.substitutions.items():
             text = text.replace(key, value)
         i = 0
