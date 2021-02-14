@@ -5,19 +5,23 @@ import token1 as token
 import ast
 import requests
 import subprocess
-#import os
+import os
 import json
+import re
 
 import time
 from datetime import datetime
 # from dotenv import load_dotenv
 from random import seed
 from random import randint
+from random import choice
 from discord.ext import commands
 
 seed(datetime.now())
 start_time = time.time()
 # load_dotenv('.env')
+
+announcementChanName = "Announcement"
 
 #Load json data
 json_file = "db.json"
@@ -32,8 +36,130 @@ try:
 except:
     pass
 
-bot = commands.Bot(command_prefix='!')
+# Bot Setup -- Attempt to set up greeting. If it fails, then go without it
+intents = discord.Intents(messages=True, guilds=True)
+try:
+    intents.members = True
+    bot = commands.Bot(command_prefix='!', intents=intents)
+except:
+    bot = commands.Bot(command_prefix='!', intents=intents)
 
+#variables needed for !uwu
+#I mean what else would it be for?
+json_db['uwu_suffixes'] = [
+    ' (´・ω・｀)',
+    ' (๑•́ ₃ •̀๑)',
+    ' (• o •)',
+    ' (⁎˃ᆺ˂)',
+    ' (╯﹏╰）',
+    ' (●´ω｀●)',
+    ' (◠‿◠✿)',
+    ' (✿ ♡‿♡)',
+    ' (❁´◡\`❁)',
+    ' (　\'◟ \')',
+    ' (；ω；)',
+    ' (´･ω･\`)',
+    ' o3o',
+    ' :3',
+    ' :D',
+    ' :P',
+    ' ;\_;',
+    ' <{^v^}>',
+    ' >\_<',
+    ' UwU',
+    ' ^-^',
+    ' xD',
+    ' ÙωÙ',
+    ' ㅇㅅㅇ',
+    ' （＾ｖ＾）',
+    ' \*starts howling\*',
+    ' \*leaps up and down\*',
+    ' \*wags tail\*',
+]
+
+json_db['uwu_substitutions'] = {
+    'r': 'w',
+    'l': 'w',
+    'the ': 'da ',
+    'th': 'd',
+    'hi': 'hai',
+    'has': 'haz',
+    'have': 'haz',
+    'is': 'iws',
+
+    # some words have already been uwu-ized
+    'fuck' : 'henck',
+    'bitch' : 'vewwy nice lady',
+    'shait' : 'poot',
+    ' ass ' : ' fwuffey tail ',
+    'kill' : 'nuzzle',
+    'god' : 'sonic',
+    'jesus christ' : 'cheese and wice',
+    'degenewates' : 'cutie pies',
+    'degenewate' : 'cutie pie',
+    'diwsgusting' : 'bulgy wulgy',
+    'gwossest' : 'bulgiest',
+    'gwoss' : 'AMAZEBALLS (✿ ♡‿♡)',
+    'nasty' : 'musky',
+    'hand' : 'paw',
+
+    # compounding uwu-ness
+    'uwu' : 'uwuwuwu',
+    'owo' : 'owowowo',
+    'you ' : 'uwu ',
+    'dude': 'duwude',
+    'to' : 'towo',
+    'no' : 'nowo',
+    'oh' : 'owo',
+    'do ' : 'dowo ',
+}
+
+#Write to FS
+with open(json_file, 'w') as f:
+    json.dump(json_db, f)
+
+# the following code is 100% stolen from @DerpyChap on GitHub with no shame
+# https://github.com/DerpyChap/owotext/blob/master/owotext/owo.py
+class OwO:
+    # noinspection PyDefaultArgument
+    def __init__(self, _suffixes=json_db['uwu_suffixes'], _substitutions=json_db['uwu_substitutions']):
+        self.suffixes = _suffixes
+        self.substitutions = _substitutions
+
+    def whatsthis(self, text: str):
+        """
+        UwU Convewts da specified stwing into OwO speak ʕʘ‿ʘʔ
+        :param text: Huohhhh. Da text uu want to convewt..
+        :return: OWO Da convewted stwing (人◕ω◕)
+        """
+        text = self.translate(text)
+        if self.suffixes:
+            text = (text + " " + choice(self.suffixes))
+        return text
+
+    def translate(self, text: str):
+        """
+        Convewts da specified stwing into OwO speak, without a pwefix ow suffix
+        :param text: Da text uu want to convewt
+        :return: Da convewted stwing
+        """
+
+        text = re.sub(r'<a?:\S+:[0-9]+>\s?', '', text) # remove private server emojis
+        for key, value in self.substitutions.items():
+            text = text.replace(key, value)
+        i = 0
+        while i < len(text):
+            # occasionally convert end of sentance punctuation into a uwu suffix
+            if(text[i] == '.' or text[i] == '?' or text[i] == '!'):
+                if(randint(0, 5) == 0):
+                    seed(i) # random is not very random apparently
+                    randSuffix = self.suffixes[randint(0, len(self.suffixes)-1)]
+                    text = text[:i] + randSuffix + text[i + 1:]
+            i += 1
+
+        return text
+
+o = OwO()
 
 @bot.command()
 async def ping(ctx):
@@ -146,19 +272,12 @@ async def myroles(ctx):
 @bot.command()
 async def serverroles(ctx):
     """
-    Lists roles of the server
+    Lists the roles that this bot can add you to
+    To add any role(s) to yourself, please view !add and !sub
     """
-    s = ""
-    roles = ctx.guild.roles
-    iterroles = iter(roles)
-    next(iterroles)
-    for role in iterroles:
-        if role.name == "hackbot 1.1":
-            break
-        else:
-            s += role.name
-            s += "\n"
-    await ctx.send('Servers roles:\n%s' % s)
+    roles = bot_roles(ctx, ignore_preamble=False)
+    bs = "\n" #bs stands for "Backslash" but it's bs i can't do a \n in {} for f-strings
+    await ctx.send(f"Server's Roles:{bs}{bs}{bs.join([i.name for i in roles])}")
 
 
 """
@@ -186,7 +305,8 @@ async def joined(ctx):
 @bot.command(pass_context=True)
 async def roll(ctx, arg1="1", arg2="100"):
     """
-    You can specify the amount of dice with a space or delimited with a 'd', else it will be 2 random nums between 1-6
+    You can specify the amount of dice with a space or delimited with a 'd', 
+    else it will be 2 random nums between 1-6
     """
     await ctx.message.add_reaction('\U0001F3B2')
     author = ctx.message.author.mention  # use mention string to avoid pinging other people
@@ -241,6 +361,86 @@ async def roll(ctx, arg1="1", arg2="100"):
     else:
         await ctx.send(message)
 
+@bot.command(pass_context=True)
+async def owo(ctx, arg1=""):
+    """
+    !owo Convewts da specified stwing into OwO speak ʕʘ‿ʘʔ
+
+    uwusage: !owo Hello sir. Have you heard of our lord and savior Jesus Christ?
+    returns: Hewwo siw. Have uu heawd of ouw wowd and saviow Jesus Chwist? (人◕ω◕)
+
+    and uu can even input a message url ow message id!!!! (• o •)
+
+    uwusage: !owo <message ID/message URL>
+    returns: owofied message
+
+    ow uu can simpwy use !owo by itsewf to owoify da pwevious message (╯﹏╰）
+
+    uwusage: !owo
+    returns: owofied message
+    """
+    await uwu(ctx, arg1)
+
+@bot.command(pass_context=True)
+async def uwu(ctx, arg1=""):
+    """
+    !uwu Convewts da specified stwing into OwO speak ʕʘ‿ʘʔ
+
+    uwusage: !uwu Hello sir. Have you heard of our lord and savior Jesus Christ?
+    returns: Hewwo siw. Have uu heawd of ouw wowd and saviow Jesus Chwist? (人◕ω◕)
+
+    and uu can even input a message url ow message id!!!! (• o •)
+
+    uwusage: !uwu <message ID/message URL>
+    returns: uwufied message
+
+    ow uu can simpwy use !uwu by itsewf to uwuify da pwevious message (╯﹏╰）
+
+    uwusage: !uwu
+    returns: uwufied message
+    """
+    await ctx.message.add_reaction('😽')
+    argIsText = False
+    channel = ctx.channel
+    message = ""
+    if(arg1 != ""):
+        msg_id = arg1
+        if(msg_id.isnumeric()):
+            # arg1 is a message ID
+            msg_id = int(arg1)
+        elif(arg1.find('-') != -1):
+            text = arg1.rsplit('-', 1)[1]
+            if(text.isnumeric()):
+                # arg1 is a message ID in the form of <channelID>-<messageID>
+                msg_id = int(text)
+            else:
+                argIsText = True
+        elif(arg1.find('/') != -1):
+            text = arg1.rsplit('/', 1)[1]
+            if(text.isnumeric()):
+                # arg1 is a link to a message
+                msg_id = int(text)
+            else:
+                argIsText = True
+        else:
+            argIsText = True
+
+        if(not argIsText):
+            message = await channel.fetch_message(msg_id)
+            message = message.content
+        else:
+            # arg1 is original text that wants to be uwu-ized
+            message = ctx.message.content.split(' ', 1)[1]
+    else:
+        # arg1 is nothing (grab the previous message)
+        message = await channel.history(limit=2).flatten()
+        message = message[1].content
+
+    message = o.whatsthis(message.lower())
+    if(len(message) > 2000):
+      message = "OWO youw message is too bulgy wulgy fow me to send"
+    await ctx.send(message)
+
 def get_server_uptime():
     """
     Helper function for uptime to get server uptime
@@ -271,7 +471,8 @@ async def uptime(ctx):
     """
     current = time.time()
     delta = current - start_time
-    await ctx.send(f"Bot has been {pretty_print_uptime(delta)}\nServer has been {get_server_uptime()}")
+    await ctx.send(f"Bot has been {pretty_print_uptime(delta)}\nServer has \
+    been {get_server_uptime()}")
 
 @bot.command(hidden=True)
 @commands.has_any_role('Cody', 'Dallas')
@@ -290,7 +491,8 @@ async def escalate(ctx):
 def normalize_location(loc):
     """
     Used by vaccines command:
-    Will change a phrase like "uNITED sTATES" to "United States" since all location are stored as proper nouns
+    Will change a phrase like "uNITED sTATES" to "United States" since all 
+    location are stored as proper nouns
     """
     arr = [i.lower() for i in loc.split(' ')]
     arr = [
@@ -315,7 +517,8 @@ def gll(js, loc):
 @bot.command()
 async def vaccines(ctx, loc="United States"):
     """
-    Uses the information available at howmanyvaccinated.com to state how many people have been vaccinated based off location
+    Uses the information available at howmanyvaccinated.com to state how many
+    people have been vaccinated based off location
     Will default to United States
     """
     url = "https://www.howmanyvaccinated.com/vaccine"
@@ -329,7 +532,10 @@ async def vaccines(ctx, loc="United States"):
     if dat is not None:
         #Format the number with commas to make it easier to read
         tot = "{:,}".format(int(dat['total_vaccinations']))
-        msg = f"In {loc} as of {dat['date']}, there have been {tot} vaccinations, totalling {dat['total_vaccinations_per_hundred']}% of the population."
+        msg = f"In {loc} as of {dat['date']}, there have been {tot}\
+         vaccinations, totalling {dat['total_vaccinations_per_hundred']}% of\
+         the population."
+        msg = ' '.join(msg.split())
     else:
         msg = f"Unable to find information for {loc}"
     await ctx.send(msg)
@@ -339,65 +545,6 @@ async def vaccines(ctx, loc="United States"):
 async def logout_error(ctx, error):
     await ctx.channel.send("You don't have the permission to run that command")
 
-
-@bot.command(pass_context=True)
-async def sub(ctx, *args):
-    """
-    Subtracts any roles mentioned after sub if they exist say all for all possible roles to remove
-    """
-    member = ctx.author
-    for arg in args:
-        if (arg == "all"):
-            roles = ctx.guild.roles
-            iterroles = iter(roles)
-            next(iterroles)
-            for role in iterroles:
-                if role.name == "hackbot 1.1":
-                    break
-                else:
-                    await member.remove_roles(role)
-            break
-        else:
-            role = discord.utils.get(ctx.guild.roles, name=arg)
-            await member.remove_roles(role)
-    await ctx.send(f"I\'ve removed your requested roles {member.mention}!")
-
-
-@sub.error
-async def sub_error(ctx, error):
-    await ctx.channel.send(
-        "You have probably typed a role that doesn't exist please make sure that isn't the case and try again"
-    )
-
-
-@bot.command(pass_context=True)
-async def add(ctx, *args):
-    """
-    Adds any roles mentioned after add if they exist say all for all roles possible to add
-    """
-    member = ctx.author
-    for arg in args:
-        if (arg == "all"):
-            roles = ctx.guild.roles
-            iterroles = iter(roles)
-            next(iterroles)
-            for role in iterroles:
-                if role.name == "hackbot 1.1":
-                    break
-                else:
-                    await member.add_roles(role)
-            break
-        else:
-            role = discord.utils.get(ctx.guild.roles, name=arg)
-            await member.add_roles(role)
-    await ctx.send(f"I've added your new roles {member.mention}!")
-
-
-@add.error
-async def add_error(ctx, error):
-    await ctx.channel.send(
-        "You have probably typed a role that doesn't exist please make sure that isn't the case and try again"
-    )
 
 
 async def manage_reactions(payload, added: bool):
@@ -424,12 +571,27 @@ async def manage_reactions(payload, added: bool):
 @bot.event
 async def on_member_join(member):
     botChannel = discord.utils.get(member.guild.channels, name='bot-stuff')
-    rulesChannel = discord.utils.get(member.guild.channels,
-                                     name='rules-and-info')
-    await botChannel.send((
-        f'Welcome to the server {member.mention}!\nPlease check out {rulesChannel.mention}!\nIn order to view channels you need to add the relevant roles.\
-        Type !help for help, !serverroles for the roles you can add yourself to, !add "role1" "role2" to put yourself in that course.'
-    ))
+    rulesChannel = discord.utils.get(member.guild.channels, name='rules-and-info')
+    try:
+        role = discord.utils.get(member.guild.roles, name=announcementChanName)
+        await member.add_roles(role)
+    except:
+        pass
+    msg1 = f"Welcome to the server {member.mention}!"
+    msg2 = f"Please check out {rulesChannel.mention}!"
+    msg3 = "In order to view channels you need to add the relevant roles."
+    msg4 = "Type `!help` for help, `!serverroles` for the roles you can add \
+        yourself to, `!add role1 role2` to put yourself in that course."
+    msg4 = " ".join(msg4.split())
+    msg5 = f"You have already been added to the \
+        {announcementChanName} role, so that you can keep up to date on any events\
+         that might be happening and things you might want to be aware of. \
+         Feel free to remove yourself from this role by saying `!sub \
+         {announcementChanName}` in {botChannel.mention}"
+    msg5 = " ".join(msg5.split())
+    msgList = [msg1, msg2, msg3, msg4, msg5]
+    msg = "\n".join(msgList)
+    await botChannel.send(msg)
 
 
 @bot.event
@@ -441,6 +603,148 @@ async def on_raw_reaction_add(payload):
 async def on_raw_reaction_remove(payload):
     await manage_reactions(payload, False)
 
+#Role Commands for the bot
+
+#Checks if the user has a role
+def has_role(ctx, role):
+    """
+    Checks if the user previously had the role
+    """
+    member = ctx.author
+    roles = [i.name for i in list(member.roles)]
+    return role.name in roles
+
+#Gets all the roles the bot can configure
+def bot_roles(ctx, ignore_preamble=True):
+    validRoles = []
+    roles = ctx.guild.roles[1:] #Strip @everyone
+    stopRole = bot.user.name #Everything below bot's name's role is ommitted
+    for role in roles:
+        if role.name == stopRole:
+            break
+        if not ignore_preamble or not role.name.startswith("|---"): #Preamble for organization
+            validRoles += [role]
+    return validRoles[::-1]
+
+#Add roles for a user
+@bot.command(pass_context=True)
+async def add(ctx, *args):
+    """
+    Adds any roles mentioned after add if they exist say all for all roles possible to add
+    One or many roles may be requested at a single time
+    e.g. !add role1 role2 role3
+    """
+    r_success = []
+    r_fail = []
+    r_had = []
+    member = ctx.author
+    br = bot_roles(ctx)
+
+    if "all" in args:
+        for role in br:
+            if not has_role(ctx, role):
+                try:
+                    await member.add_roles(role)
+                    r_success += [role.name]
+                except:
+                    pass #Don't care about extraneous roles
+    else:
+        #Attempt to add users roles
+        for arg in args:
+            role = discord.utils.get(ctx.guild.roles, name=arg)
+            if role not in br: #Check if it's an accepted role first
+                r_fail += [arg]
+
+            else:
+                try:
+                    #Check if user already had role
+                    if not has_role(ctx, role):
+                        await member.add_roles(role)
+                        r_success += [arg]
+                    else:
+                        r_had += [arg]
+                except:
+                    r_fail += [arg]
+
+    msg = ""
+    if r_success:
+        msg += f"I have succesfully added the role(s): {' '.join(r_success)}\n"
+    if r_had:
+        msg += f"You were already in the role(s): {' '.join(r_had)}\n"
+    if r_fail:
+        msg += f"I have failed to add the role(s): {' '.join(r_fail)}\n"
+    if r_fail:
+        msg += "Please use !serverroles to check available roles and spelling\n"
+
+    if not msg:
+        msg = "I did nothing"
+
+    #Message back to user
+    await ctx.send(f"{member.mention}:\n{msg}")
+
+#Sub roles for a user
+@bot.command(pass_context=True)
+async def sub(ctx, *args):
+    """
+    Subtracts any roles mentioned after sub if they exist say all for all possible roles to remove
+    One or many roles may be requested at a single time
+    e.g. !sub role1 role2 role3
+    """
+    r_success = []
+    r_fail = []
+    r_had = []
+    member = ctx.author
+    br = bot_roles(ctx)
+    if "all" in args:
+        for role in br:
+            if has_role(ctx, role):
+                try:
+                    await member.remove_roles(role)
+                    r_success += [role.name]
+                except:
+                    pass #Don't care about extraneous roles
+    else:
+        for arg in args:
+            role = discord.utils.get(ctx.guild.roles, name=arg)
+            if role not in br: #Check if it's an accepted role first
+                r_fail += [arg]
+
+            else:
+                try:
+                    #Check if user didn't already have role
+                    if has_role(ctx, role):
+                        await member.remove_roles(role)
+                        r_success += [arg]
+                    else:
+                        r_had += [arg]
+                except:
+                    r_fail += [arg]
+
+    msg = ""
+    if r_success:
+        msg += f"I have succesfully removed the role(s): {' '.join(r_success)}\n"
+    if r_had:
+        msg += f"You were not in the role(s): {' '.join(r_had)}\n"
+    if r_fail:
+        msg += f"I have failed to remove the role(s): {' '.join(r_fail)}\n"
+    if r_had or r_fail:
+        msg += "Please use !myroles to double check roles you are in and spelling\n"
+
+    if not msg:
+        msg = "I did nothing"
+
+    #Message back to user
+    await ctx.send(f"{member.mention}:\n{msg}")
+
+@bot.command()
+@commands.has_any_role('Cody', 'Dallas')
+async def update(ctx):
+    update_script = "./update.sh"
+    if os.path.exists(update_script):
+        await ctx.send("Attempting to Update")
+        subprocess.run(["./update.sh"])
+    else:
+        await ctx.send("Update Script Not Found")
 
 #bot.run(os.getenv('TOKEN'))
 bot.run(token.stringToken())
