@@ -52,6 +52,13 @@ async def whoisjoe(ctx):
     else:
         await ctx.send("JOE MAMA")
 
+@bot.command()
+async def prse(ctx):
+    """
+    because of course we need a !prse command
+    """
+    await ctx.send("PReSEnting: https://github.com/Asterisk007/prse\n[This programming language is not endorsed by the University, nor this Discord server.]")
+
 @bot.command(hidden=True)
 async def joeis(ctx, *, arg):
     """
