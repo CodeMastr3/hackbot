@@ -1,7 +1,6 @@
 import discord
 import discord.utils
 import emojiRole
-import token1 as token
 import ast
 import requests
 import subprocess
@@ -16,6 +15,7 @@ from random import seed
 from random import randint
 from random import choice
 from discord.ext import commands
+from token_giver import get_token
 
 seed(datetime.now())
 start_time = time.time()
@@ -747,4 +747,4 @@ async def update(ctx):
         await ctx.send("Update Script Not Found")
 
 #bot.run(os.getenv('TOKEN'))
-bot.run(token.stringToken())
+bot.run(get_token())
