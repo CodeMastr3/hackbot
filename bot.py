@@ -521,7 +521,7 @@ def sll(js, loc):
     """
     loc = loc.lower()
     for s in js:
-        if s['Location'].lower() == loc or s['ShortName'] == loc or s['LongName'] == loc:
+        if s['Location'].lower() == loc or s['ShortName'].lower() == loc or s['LongName'].lower() == loc:
             return s
     return None
 
