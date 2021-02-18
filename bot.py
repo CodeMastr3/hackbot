@@ -513,6 +513,18 @@ def gll(js, loc):
             return s
     return None
 
+def sll(js, loc):
+    """
+    Used for the vaccines command, will search through and try to find the state's
+    information using newegg's data
+    Heck newegg
+    """
+    loc = loc.lower()
+    for s in js:
+        if s['Location'].lower() == loc or s['ShortName'] == loc or s['LongName'] == loc:
+            return s
+    return None
+
 
 @bot.command()
 async def vaccines(ctx, loc="United States"):
@@ -522,14 +534,29 @@ async def vaccines(ctx, loc="United States"):
     Will default to United States
     """
     url = "https://www.howmanyvaccinated.com/vaccine"
-    page = requests.get(url)
-    js = page.json()
+    states_url = "https://promotions.newegg.com/EC/covid19/vaccination/vaccina.json"
 
-    #Make sure that the location has every chance to succeed without fuzzy finding
-    loc = normalize_location(loc)
-    dat = gll(js, loc)
+    page = requests.get(url)
+    states_page = requests.get(states_url)
+    js = page.json()
+    states_js = states_page.json()
+
+    state_dat = sll(states_js["vaccination_data"], loc)
+    dat = None
+    if state_dat is None: #Should only do extra work if can't find state data
+        dat = gll(js, normalize_location(loc))
+
     msg = ""
-    if dat is not None:
+    if state_dat is not None:
+        ad1 = "{:,}".format(int(state_dat['Administered_Dose1']))
+        ad2 = "{:,}".format(int(state_dat['Administered_Dose2']))
+
+        msg = (f"In {state_dat['LongName']} as of {state_dat['Date']}, there have been "
+               f"{ad1}({state_dat['Administered_Dose1_Pop_Pct']}%) "
+               f"persons who have received Dose 1, "
+               f"{ad2}({state_dat['Administered_Dose2_Pop_Pct']}%) persons who have received Dose 2")
+
+    elif dat is not None:
         #Format the number with commas to make it easier to read
         tot = "{:,}".format(int(dat['total_vaccinations']))
         msg = f"In {loc} as of {dat['date']}, there have been {tot}\
