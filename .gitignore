@@ -137,6 +137,3 @@ db.json
 
 #Swap files
 *.swp
-
-# Discord bot private token giver
-token_giver.py

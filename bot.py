@@ -10,16 +10,15 @@ import re
 
 import time
 from datetime import datetime
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 from random import seed
 from random import randint
 from random import choice
 from discord.ext import commands
-from token_giver import get_token
 
 seed(datetime.now())
 start_time = time.time()
-# load_dotenv('.env')
+load_dotenv('.env')
 
 announcementChanName = "Announcement"
 
@@ -746,5 +745,5 @@ async def update(ctx):
     else:
         await ctx.send("Update Script Not Found")
 
-#bot.run(os.getenv('TOKEN'))
-bot.run(get_token())
+bot.run(os.getenv('TOKEN'))
+#bot.run(get_token())
