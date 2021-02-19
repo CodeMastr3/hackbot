@@ -666,6 +666,8 @@ async def add(ctx, *args):
     r_had = []
     member = ctx.author
     br = bot_roles(ctx)
+    # Here is the thing im trying to add - then call brole_lower 
+    brole_lower = {i.name.lowered: i for i in br}
 
     if "all" in args:
         for role in br:
@@ -687,7 +689,7 @@ async def add(ctx, *args):
                     #Check if user already had role
                     if not has_role(ctx, role):
                         await member.add_roles(role)
-                        r_success += [arg]
+                        r_success += brole_lower[arg]
                     else:
                         r_had += [arg]
                 except:
