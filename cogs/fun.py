@@ -96,32 +96,38 @@ class FunCog(commands.Cog):
 
     #@client.event
     @commands.command(pass_context=True)
-    async def ban(self, ctx, arg1=""):
+    async def ban(self, ctx):
         """
         Bans (but not actually) the person specified in the first argument.
         If argument is an empty string, assume it was the last person talking
         """
 
+        # Check that only one user is mentioned
+        mentions_list = ctx.message.mentions
+
         message = ""
 
-        # Courtesy of https://stackoverflow.com/questions/61243162/discord-py-how-to-detect-if-a-user-mentions-pings-the-bot
-        #bot_name = client.user.mention
-
-        if arg1 != "":
-            #if bot_name not in arg1:
-            message = "brb, banning " + arg1
-            #elif bot_name in arg1:
-            #    message = ctx.message.author.mention + " you can't ban me!"
+        if len(mentions_list) > 1:
+            # Multiple user ban not allowed
+            await ctx.send(ctx.message.author.mention + " woah bucko, one ban at a time, please!")
+        elif len(mentions_list) == 1:
+            # One user ban at a time.
+            # If the user not a bot, ban them. Otherwise, special message.
+            if not mentions_list[0].bot:
+                message = "brb, banning " + mentions_list[0].mention
+            else:
+                message = ctx.message.author.mention + " you can't ban me!"
         else:
             channel = ctx.channel
             prev_author = await channel.history(limit=2).flatten()
+            user_is_bot = prev_author[1].author.bot
             prev_author = prev_author[1].author.mention
             
-            #if prev_author != bot_name:
-            message = "brb, banning " + prev_author
-            #else:
-            #    message = ctx.message.author.mention + " you can't ban me!"
-            
+            if not (user_is_bot):
+                message = "brb, banning " + prev_author
+            else:
+                message = ctx.message.author.mention + " you can't ban me!"
+                
         await ctx.send(message)
             
 
