@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from random import randint
 
+#client = commands.Bot(command_prefix = "!")
+
 class FunCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -91,6 +93,37 @@ class FunCog(commands.Cog):
             await ctx.send(f"Woah {author}, your rolls are too powerful")
         else:
             await ctx.send(message)
+
+    #@client.event
+    @commands.command(pass_context=True)
+    async def ban(self, ctx, arg1=""):
+        """
+        Bans (but not actually) the person specified in the first argument.
+        If argument is an empty string, assume it was the last person talking
+        """
+
+        message = ""
+
+        # Courtesy of https://stackoverflow.com/questions/61243162/discord-py-how-to-detect-if-a-user-mentions-pings-the-bot
+        #bot_name = client.user.mention
+
+        if arg1 != "":
+            #if bot_name not in arg1:
+            message = "brb, banning " + arg1
+            #elif bot_name in arg1:
+            #    message = ctx.message.author.mention + " you can't ban me!"
+        else:
+            channel = ctx.channel
+            prev_author = await channel.history(limit=2).flatten()
+            prev_author = prev_author[1].author.mention
+            
+            #if prev_author != bot_name:
+            message = "brb, banning " + prev_author
+            #else:
+            #    message = ctx.message.author.mention + " you can't ban me!"
+            
+        await ctx.send(message)
+            
 
 def setup(bot):
     bot.add_cog(FunCog(bot))
