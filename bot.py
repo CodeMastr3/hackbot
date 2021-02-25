@@ -195,7 +195,7 @@ async def on_message(message):
         js = page.json()
 
         output_msg += f"➝ {stock.upper()} ({js['companyName']}) - "
-        if('isUSMarketOpen' in js and not js['isUSMarketOpen']):
+        if(js['extendedPrice'] is not None and not js['isUSMarketOpen']):
           output_msg += f"Current price: ${str(js['latestPrice'])}\n"
           output_msg += f"\t\tAfter hours price: **${str(js['extendedPrice'])}**\n"
         else:
