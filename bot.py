@@ -168,6 +168,50 @@ async def ping(ctx):
     """
     await ctx.send('pong')
 
+# detect stock tickers and display their current price
+@bot.listen('on_message')
+async def on_message(message):
+    msg_str = await message.channel.fetch_message(message.id)
+    msg_str = msg_str.content
+
+    output_msg = ""
+
+    # ignore user commands, as well as responses by the bot
+    if(msg_str[0] == "!" or message.author.bot):
+        return
+
+    matches = re.finditer("\$[a-zA-Z]+", msg_str)
+    num_matches = 0
+    for match in matches:
+        stock = msg_str[match.start()+1:match.end()]
+        # token is publishable
+        request_url = f"https://cloud.iexapis.com/stable/stock/{stock}/quote?token=pk_b2df4f042df34774b50c5693366f8a57"
+
+        page = requests.get(request_url)
+        if(page.status_code != 200):
+            continue
+
+        num_matches += 1
+        js = page.json()
+        output_msg += f"➝ {stock.upper()} ({js['companyName']}) - "
+        if(js['isUSMarketOpen']):
+          output_msg += f"Current price: ${str(js['latestPrice'])}\n"
+          output_msg += f"\t\tAfter hours price: **${str(js['extendedPrice'])}**\n"
+        else:
+          output_msg += f"Current price: **${str(js['latestPrice'])}**\n"
+
+    if(num_matches == 0):
+      return
+
+    # we are not guarenteed to respond until at least this line
+    await message.add_reaction('📈')
+
+    output_msg = "I have detected " + str(num_matches) + f" stock ticker{('s') if num_matches != 1 else ''} in your message\n" + output_msg
+    output_msg += "\n"
+    output_msg += "ᴡᴇ ᴅᴏ ɴᴏᴛ ɢᴜᴀʀᴀɴᴛᴇᴇ ᴛʜᴇ ᴀᴄᴄᴜʀᴀᴄʏ ᴏғ ᴛʜɪs ᴅᴀᴛᴀ"
+    channel = await discord.Client.fetch_channel(bot, message.channel.id)
+    await channel.send(output_msg)
+
 @bot.command()
 async def whoisjoe(ctx):
     """
