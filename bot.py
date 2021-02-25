@@ -196,10 +196,10 @@ async def on_message(message):
 
         output_msg += f"➝ {stock.upper()} ({js['companyName']}) - "
         if(js['extendedPrice'] is not None and not js['isUSMarketOpen']):
-          output_msg += f"Current price: ${str(js['latestPrice'])}\n"
-          output_msg += f"\t\tAfter hours price: **${str(js['extendedPrice'])}**\n"
+          output_msg += f"Current price: ${str('{:.2f}'.format(js['latestPrice']))}\n"
+          output_msg += f"\t\tAfter hours price: **${str('{:.2f}'.format(js['extendedPrice']))}**\n"
         else:
-          output_msg += f"Current price: **${str(js['latestPrice'])}**\n"
+          output_msg += f"Current price: **${str('{:.2f}'.format(js['latestPrice']))}**\n"
 
     if(num_matches == 0):
       return
