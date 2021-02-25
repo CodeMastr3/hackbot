@@ -193,8 +193,9 @@ async def on_message(message):
 
         num_matches += 1
         js = page.json()
+
         output_msg += f"➝ {stock.upper()} ({js['companyName']}) - "
-        if(js['isUSMarketOpen']):
+        if('isUSMarketOpen' in js and not js['isUSMarketOpen']):
           output_msg += f"Current price: ${str(js['latestPrice'])}\n"
           output_msg += f"\t\tAfter hours price: **${str(js['extendedPrice'])}**\n"
         else:
@@ -206,7 +207,7 @@ async def on_message(message):
     # we are not guarenteed to respond until at least this line
     await message.add_reaction('📈')
 
-    output_msg = "I have detected " + str(num_matches) + f" stock ticker{('s') if num_matches != 1 else ''} in your message\n" + output_msg
+    output_msg = "I have detected " + str(num_matches) + f" stock ticker{('s') if num_matches != 1 else ''} in your message\n\n" + output_msg
     output_msg += "\n"
     output_msg += "ᴡᴇ ᴅᴏ ɴᴏᴛ ɢᴜᴀʀᴀɴᴛᴇᴇ ᴛʜᴇ ᴀᴄᴄᴜʀᴀᴄʏ ᴏғ ᴛʜɪs ᴅᴀᴛᴀ"
     channel = await discord.Client.fetch_channel(bot, message.channel.id)
