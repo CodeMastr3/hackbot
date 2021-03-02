@@ -5,7 +5,6 @@ import ast
 import os
 import json
 import re
-import requests
 import subprocess
 
 # from dotenv import load_dotenv
@@ -164,7 +163,6 @@ async def joeis(ctx, *, arg):
     with open(json_file, 'w') as f:
         json.dump(json_db, f)
     await ctx.message.delete()
-
 
 @bot.command(pass_context=True)
 async def owo(ctx, arg1=""):
