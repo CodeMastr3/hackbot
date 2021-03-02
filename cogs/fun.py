@@ -2,11 +2,19 @@ import discord
 from discord.ext import commands
 from random import randint
 
-#client = commands.Bot(command_prefix = "!")
 
 class FunCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+    def is_user_self(self, user_mentioned):
+        bot_as_user = self.bot.user
+        if (user_mentioned.name == bot_as_user.name 
+        and user_mentioned.discriminator == bot_as_user.discriminator
+        and user_mentioned.bot):
+            return True
+        else:
+            return False
 
     @commands.command()
     async def ping(self, ctx):
@@ -94,36 +102,36 @@ class FunCog(commands.Cog):
         else:
             await ctx.send(message)
 
-    #@client.event
     @commands.command(pass_context=True)
     async def ban(self, ctx):
         """
-        Bans (but not actually) the person specified in the first argument.
-        If argument is an empty string, assume it was the last person talking
+        Bans (but not actually) the person mentioned.
+        If argument is an empty string, assume it was the last person talking.
         """
 
-        # Check that only one user is mentioned
         mentions_list = ctx.message.mentions
 
         message = ""
 
+        # Check that only one user is mentioned
         if len(mentions_list) > 1:
             # Multiple user ban not allowed
             await ctx.send(ctx.message.author.mention + " woah bucko, one ban at a time, please!")
         elif len(mentions_list) == 1:
             # One user ban at a time.
             # If the user not a bot, ban them. Otherwise, special message.
-            if not mentions_list[0].bot:
-                message = "brb, banning " + mentions_list[0].mention
+            user_mentioned = mentions_list[0]
+            if not self.is_user_self(user_mentioned):
+                message = "brb, banning " + user_mentioned.mention
             else:
                 message = ctx.message.author.mention + " you can't ban me!"
         else:
             channel = ctx.channel
             prev_author = await channel.history(limit=2).flatten()
-            user_is_bot = prev_author[1].author.bot
+            user_being_banned = prev_author[1].author
             prev_author = prev_author[1].author.mention
             
-            if not (user_is_bot):
+            if not self.is_user_self(user_being_banned):
                 message = "brb, banning " + prev_author
             else:
                 message = ctx.message.author.mention + " you can't ban me!"
