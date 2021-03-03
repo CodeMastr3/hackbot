@@ -226,7 +226,7 @@ async def uwu(ctx, arg1=""):
         else:
             # arg1 is original text that wants to be uwu-ized
             if "uwu-immune" in [r.name.lower() for r in ctx.message.author.roles]:
-                await ctx.send("UwU this usew is uwu-immune! sowwy... 😭")
+                await ctx.send("UwU you'we immune to the uwu! sowwy... 😭")
             else:
                 message = ctx.message.content.split(' ', 1)[1]
     else:
