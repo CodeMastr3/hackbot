@@ -92,8 +92,8 @@ class InfoCog(commands.Cog):
 
         msg = ""
         if state_dat is not None:
-            ad1 = "{:,}".format(int(state_dat['Administered_Dose1']))
-            ad2 = "{:,}".format(int(state_dat['Administered_Dose2']))
+            ad1 = "{:,}".format(int(state_dat['Administered_Dose1_Recip']))
+            ad2 = "{:,}".format(int(state_dat['Administered_Dose2_Recip']))
 
             msg = (f"In {state_dat['LongName']} as of {state_dat['Date']}, there have been "
                 f"{ad1}({state_dat['Administered_Dose1_Pop_Pct']}%) "
