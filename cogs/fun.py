@@ -2,9 +2,19 @@ import discord
 from discord.ext import commands
 from random import randint
 
+
 class FunCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+    def is_user_self(self, user_mentioned):
+        bot_as_user = self.bot.user
+        if (user_mentioned.name == bot_as_user.name 
+        and user_mentioned.discriminator == bot_as_user.discriminator
+        and user_mentioned.bot):
+            return True
+        else:
+            return False
 
     @commands.command()
     async def ping(self, ctx):
@@ -91,6 +101,55 @@ class FunCog(commands.Cog):
             await ctx.send(f"Woah {author}, your rolls are too powerful")
         else:
             await ctx.send(message)
+
+    @commands.command(pass_context=True)
+    async def ban(self, ctx):
+        """
+        Bans (but not actually) the person mentioned.
+        If argument is an empty string, assume it was the last person talking.
+        """
+
+        mentions_list = ctx.message.mentions
+
+        message = ""
+
+        # Check that only one user is mentioned
+        if len(mentions_list) > 1:
+            # Multiple user ban not allowed
+            await ctx.send(ctx.message.author.mention + " woah bucko, one ban at a time, please!")
+        elif len(mentions_list) == 1:
+            # One user ban at a time.
+            # If the user not a bot, ban them. Otherwise, special message.
+            user_mentioned = mentions_list[0]
+            if not self.is_user_self(user_mentioned):
+                # Check that the user being banned is not a professor.
+                # Get user's roles
+                roles_raw = ctx.message.guild.get_member(user_mentioned.id).roles
+                roles = []
+                # Turn into list, and lowercase it.
+                for role in roles_raw:
+                    roles.append(role.name)
+                roles_lower = [i.lower() for i in roles]
+                # Tell users who try to ban a professor that they may not do so.
+                if "professors" in roles_lower:
+                    message = ctx.message.author.mention + " you can't ban a professor."
+                else:
+                    message = "brb, banning " + user_mentioned.mention
+            else:
+                message = ctx.message.author.mention + " you can't ban me!"
+        else:
+            channel = ctx.channel
+            prev_author = await channel.history(limit=2).flatten()
+            user_being_banned = prev_author[1].author
+            prev_author = prev_author[1].author.mention
+            
+            if not self.is_user_self(user_being_banned):
+                message = "brb, banning " + prev_author
+            else:
+                message = ctx.message.author.mention + " you can't ban me!"
+                
+        await ctx.send(message)
+            
 
 def setup(bot):
     bot.add_cog(FunCog(bot))
