@@ -219,23 +219,14 @@ async def uwu(ctx, arg1=""):
 
         if(not argIsText):
             message = await channel.fetch_message(msg_id)
-            if "uwu-immune" in [r.name.lower() for r in message.author.roles]:
-                await ctx.send("UwU this usew is uwu-immune! sowwy... 😭")
-            else:
-                message = message.content
+            message = message.content
         else:
             # arg1 is original text that wants to be uwu-ized
-            if "uwu-immune" in [r.name.lower() for r in ctx.message.author.roles]:
-                await ctx.send("UwU you'we immune to the uwu! sowwy... 😭")
-            else:
-                message = ctx.message.content.split(' ', 1)[1]
+            message = ctx.message.content.split(' ', 1)[1]
     else:
         # arg1 is nothing (grab the previous message)
         message = await channel.history(limit=2).flatten()
-        if "uwu-immune" in [r.name.lower() for r in message[1].author.roles]:
-            await ctx.send("UwU this usew is uwu-immune! sowwy... 😭")
-        else:
-            message = message[1].content
+        message = message[1].content
 
     message = o.whatsthis(message.lower())
     if(len(message) > 2000):
