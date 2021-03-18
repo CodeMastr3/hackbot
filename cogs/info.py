@@ -70,7 +70,7 @@ class InfoCog(commands.Cog):
             #await ctx.message.add_reaction('\U0001F3B2')
     """
 
-    @commands.command()
+    @commands.command(name='vaccines', aliases=['vc', 'vaccine', 'vaccinations', 'vaccination'])
     async def vaccines(self, ctx, loc="United States"):
         """
         Uses the information available at howmanyvaccinated.com to state how many
