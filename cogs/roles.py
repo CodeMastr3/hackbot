@@ -50,7 +50,7 @@ class RolesCog(commands.Cog):
                 await reacted_message.add_reaction(emo)
 
     # List the members roles
-    @commands.command()
+    @commands.command(name='myroles', aliases=['myr', 'mr'])
     async def myroles(self, ctx):
         """
         Lists roles of member that called this function
