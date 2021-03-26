@@ -7,6 +7,7 @@ from discord.ext import commands
 
 #Role Commands for the bot
 
+# For the watched message
 messageDict = emojiRolemessage
 with open('roles.txt', 'r') as f:
     s = f.read()
@@ -29,6 +30,7 @@ class RolesCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    # Makes the watched message for adding/removing roles
     @commands.command()
     @commands.has_any_role('Cody', 'Dallas')
     async def addMessage(self, ctx):
@@ -47,7 +49,8 @@ class RolesCog(commands.Cog):
             for emo in emolist:
                 await reacted_message.add_reaction(emo)
 
-    @commands.command(name='myroles', aliases=['myr', 'mr'])
+    # List the members roles
+    @commands.command()
     async def myroles(self, ctx):
         """
         Lists roles of member that called this function
@@ -61,6 +64,7 @@ class RolesCog(commands.Cog):
             s += "\n"
         await ctx.send(f"Your roles:\n{s}")
 
+    # List server roles below bot role
     @commands.command(name='serverroles', aliases=['sr'])
     async def serverroles(self, ctx):
         """
@@ -71,6 +75,7 @@ class RolesCog(commands.Cog):
         bs = "\n" #bs stands for "Backslash" but it's bs i can't do a \n in {} for f-strings
         await ctx.send(f"Server's Roles:{bs}{bs}{bs.join([i.name for i in roles])}")
 
+    # If message is watched message give/remove role
     async def manage_reactions(self, payload, added: bool):
         if not payload.message_id in watched_message:
             return
@@ -91,15 +96,17 @@ class RolesCog(commands.Cog):
         else:
             await member.remove_roles(role)
 
+    # Watches for addition of reactions
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         await self.manage_reactions(payload, True)
 
+    # Watches for removal of reactions
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self,payload):
         await self.manage_reactions(payload, False)
 
-    #Checks if the user has a role
+    # Checks if the user has a role
     def has_role(self, ctx, role):
         """
         Checks if the user previously had the role
@@ -108,7 +115,7 @@ class RolesCog(commands.Cog):
         roles = [i.name for i in list(member.roles)]
         return role.name in roles
 
-    #Gets all the roles the bot can configure
+    # Gets all the roles the bot can configure
     def bot_roles(self, ctx, ignore_preamble=True):
         validRoles = []
         roles = ctx.guild.roles[1:] #Strip @everyone
@@ -120,7 +127,7 @@ class RolesCog(commands.Cog):
                 validRoles += [role]
         return validRoles[::-1]
 
-    #Add roles for a user
+    # Add roles for a user
     @commands.command(pass_context=True)
     async def add(self, ctx, *args):
         """
@@ -176,7 +183,7 @@ class RolesCog(commands.Cog):
         #Message back to user
         await ctx.send(f"{member.mention}:\n{msg}")
 
-    #Sub roles for a user
+    # Subtracts roles for a user
     @commands.command(pass_context=True, name="sub", aliases=['rm', 'del'])
     async def sub(self, ctx, *args):
         """
@@ -230,5 +237,6 @@ class RolesCog(commands.Cog):
         #Message back to user
         await ctx.send(f"{member.mention}:\n{msg}")
 
+# Adds the cog to the bot
 def setup(bot):
     bot.add_cog(RolesCog(bot))

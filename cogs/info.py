@@ -59,16 +59,6 @@ class InfoCog(commands.Cog):
         await ctx.send(f"Bot has been {self.pretty_print_uptime(delta)}\nServer has \
         been {self.get_server_uptime()}")
 
-    """
-    @commands.command()
-    async def poll(self, ctx, *arg):
-        "Adds (a) reaction(s) to a poll message with the number immediately after poll"
-        for i in range(arg1):
-            ctx.send('I\'m not implemented yet')
-            #
-            #await ctx.message.add_reaction('\U0001F3B2')
-    """
-
     @commands.command(name='vaccines', aliases=['vc', 'vaccine', 'vaccinations', 'vaccination'])
     async def vaccines(self, ctx, loc="United States"):
         """
@@ -86,7 +76,7 @@ class InfoCog(commands.Cog):
 
         state_dat = self.sll(states_js["vaccination_data"], loc)
         dat = None
-        if state_dat is None: #Should only do extra work if can't find state data
+        if state_dat is None: # Should only do extra work if can't find state data
             dat = self.gll(js, self.normalize_location(loc))
 
         msg = ""
@@ -100,7 +90,7 @@ class InfoCog(commands.Cog):
                 f"{ad2}({state_dat['Administered_Dose2_Pop_Pct']}%) persons who have received Dose 2")
 
         elif dat is not None:
-            #Format the number with commas to make it easier to read
+            # Format the number with commas to make it easier to read
             tot = "{:,}".format(int(dat['total_vaccinations']))
             msg = f"In {loc} as of {dat['date']}, there have been {tot}\
             vaccinations, totalling {dat['total_vaccinations_per_hundred']}% of\
@@ -173,5 +163,63 @@ class InfoCog(commands.Cog):
         """
         await ctx.send("PReSEnting: https://github.com/Asterisk007/prse\n[This programming language is not endorsed by the University, nor this Discord server.]")
 
+    # Detect stock tickers and display their current price
+    @commands.Cog.listener()
+    async def on_message(self, payload):
+        max_tickers = 10 # adjusts the max amount of tickers the bot will fetch
+        msg_str = await payload.channel.fetch_message(payload.id)
+        msg_str = msg_str.content
+
+        output_msg = ""
+
+        # ignore user commands, as well as responses by the bot
+        if(msg_str[0] == "!" or payload.author.bot):
+            return
+
+        matches = re.finditer("\$[a-zA-Z]+", msg_str)
+        num_matches = 0
+        for match in matches:
+            if(num_matches >= max_tickers):
+                num_matches += 1
+                continue
+
+            stock = msg_str[match.start()+1:match.end()]
+            token = "pk_b2df4f042df34774b50c5693366f8a57" # public token
+            request_url = f"https://cloud.iexapis.com/stable/stock/{stock}/quote?token={token}"
+
+            page = requests.get(request_url)
+            if(page.status_code != 200):
+                continue
+
+            if(num_matches == 0):
+                # add a reaction the first time a succesful connection is made. messages with many
+                # tickers may take a bit to respond, so this lets the user know the command is working
+                await payload.add_reaction('📈')
+
+            num_matches += 1
+            js = page.json()
+
+            output_msg += f"➝ {stock.upper()} ({js['companyName']}) - "
+            if(js['extendedPrice'] is not None and not js['isUSMarketOpen']):
+              output_msg += f"Current price: ${str('{:.2f}'.format(js['latestPrice']))}\n"
+              output_msg += f"\t\tAfter hours price: **${str('{:.2f}'.format(js['extendedPrice']))}**\n"
+            else:
+              output_msg += f"Current price: **${str('{:.2f}'.format(js['latestPrice']))}**\n"
+
+        if(num_matches == 0):
+          return
+
+        # we are not guarenteed to respond until at least this line
+
+        if(num_matches > max_tickers):
+            output_msg += f"Plus {num_matches - max_tickers} more\n"
+
+        output_msg = "I have detected " + str(num_matches) + f" stock ticker{('s') if num_matches != 1 else ''} in your message\n\n" + output_msg
+        output_msg += "\n"
+        output_msg += "ᴡᴇ ᴅᴏ ɴᴏᴛ ɢᴜᴀʀᴀɴᴛᴇᴇ ᴛʜᴇ ᴀᴄᴄᴜʀᴀᴄʏ ᴏғ ᴛʜɪs ᴅᴀᴛᴀ"
+        channel = payload.channel #await discord.Client.fetch_channel(Cog, payload.channel.id)
+        await channel.send(output_msg)
+
+# Adds the cog to the bot
 def setup(bot):
     bot.add_cog(InfoCog(bot))

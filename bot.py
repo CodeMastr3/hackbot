@@ -244,6 +244,7 @@ async def uwu(ctx, arg1=""):
       message = "OWO youw message is too bulgy wulgy fow me to send"
     await ctx.send(message)
 
+# Makes it so specific people can log bot out
 @bot.command(hidden=True)
 @commands.has_any_role('Cody', 'Dallas')
 async def logout(ctx):
@@ -291,6 +292,7 @@ async def update(ctx):
     else:
         await ctx.send("Update Script Not Found")
 
+# Add cogs here to get them loaded in the next if statement
 initial_extensions = ['cogs.roles', 'cogs.info', 'cogs.fun']
 
 if __name__ == '__main__':

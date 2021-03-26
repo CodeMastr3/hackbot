@@ -92,5 +92,6 @@ class FunCog(commands.Cog):
         else:
             await ctx.send(message)
 
+# Adds the cog to the bot
 def setup(bot):
     bot.add_cog(FunCog(bot))
