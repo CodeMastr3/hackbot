@@ -1,19 +1,18 @@
 import discord
 import discord.utils
-import token1 as token
 import ast
 import os
 import json
 import re
 import subprocess
 
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 from random import seed
 from random import randint
 from random import choice
 from discord.ext import commands
 
-# load_dotenv('.env')
+load_dotenv('.env')
 json_file = "db.json"
 json_db = {}
 try:
@@ -168,17 +167,12 @@ async def joeis(ctx, *, arg):
 async def owo(ctx, arg1=""):
     """
     !owo Convewts da specified stwing into OwO speak ʕʘ‿ʘʔ
-
     uwusage: !owo Hello sir. Have you heard of our lord and savior Jesus Christ?
     returns: Hewwo siw. Have uu heawd of ouw wowd and saviow Jesus Chwist? (人◕ω◕)
-
     and uu can even input a message url ow message id!!!! (• o •)
-
     uwusage: !owo <message ID/message URL>
     returns: owofied message
-
     ow uu can simpwy use !owo by itsewf to owoify da pwevious message (╯﹏╰）
-
     uwusage: !owo
     returns: owofied message
     """
@@ -188,17 +182,12 @@ async def owo(ctx, arg1=""):
 async def uwu(ctx, arg1=""):
     """
     !uwu Convewts da specified stwing into OwO speak ʕʘ‿ʘʔ
-
     uwusage: !uwu Hello sir. Have you heard of our lord and savior Jesus Christ?
     returns: Hewwo siw. Have uu heawd of ouw wowd and saviow Jesus Chwist? (人◕ω◕)
-
     and uu can even input a message url ow message id!!!! (• o •)
-
     uwusage: !uwu <message ID/message URL>
     returns: uwufied message
-
     ow uu can simpwy use !uwu by itsewf to uwuify da pwevious message (╯﹏╰）
-
     uwusage: !uwu
     returns: uwufied message
     """
@@ -230,14 +219,24 @@ async def uwu(ctx, arg1=""):
 
         if(not argIsText):
             message = await channel.fetch_message(msg_id)
-            message = message.content
+            if "uwu-immune" in [r.name.lower() for r in message.author.roles]:
+                await ctx.send("UwU this usew is uwu-immune! sowwy... 😭")
+            else:
+                message = message.content
         else:
             # arg1 is original text that wants to be uwu-ized
-            message = ctx.message.content.split(' ', 1)[1]
+            if "uwu-immune" in [r.name.lower() for r in ctx.message.author.roles]:
+                await ctx.send("UwU you'we immune to the uwu! sowwy... 😭")
+                return
+            else:
+                message = ctx.message.content.split(' ', 1)[1]
     else:
         # arg1 is nothing (grab the previous message)
         message = await channel.history(limit=2).flatten()
-        message = message[1].content
+        if "uwu-immune" in [r.name.lower() for r in message[1].author.roles]:
+            await ctx.send("UwU this usew is uwu-immune! sowwy... 😭")
+        else:
+            message = message[1].content
 
     message = o.whatsthis(message.lower())
     if(len(message) > 2000):
@@ -299,5 +298,4 @@ if __name__ == '__main__':
     for extension in initial_extensions:
         bot.load_extension(extension)
 
-#bot.run(os.getenv('TOKEN'))
-bot.run(token.stringToken())
+bot.run(os.getenv('TOKEN'))
