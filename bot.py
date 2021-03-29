@@ -221,6 +221,7 @@ async def uwu(ctx, arg1=""):
             message = await channel.fetch_message(msg_id)
             if "uwu-immune" in [r.name.lower() for r in message.author.roles]:
                 await ctx.send("UwU this usew is uwu-immune! sowwy... 😭")
+                return
             else:
                 message = message.content
         else:
@@ -235,6 +236,7 @@ async def uwu(ctx, arg1=""):
         message = await channel.history(limit=2).flatten()
         if "uwu-immune" in [r.name.lower() for r in message[1].author.roles]:
             await ctx.send("UwU this usew is uwu-immune! sowwy... 😭")
+            return
         else:
             message = message[1].content
 
