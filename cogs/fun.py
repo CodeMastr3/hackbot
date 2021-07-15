@@ -220,7 +220,12 @@ class FunCog(commands.Cog):
                 await ctx.send("https://c.tenor.com/d0VNnBZkSUkAAAAM/bongocat-banhammer.gif")
                 return
         await ctx.send(message)
-            
+    @commands.command(pass_context=True)
+    async def yeet(self, ctx):
+        '''
+        YEET
+        '''
+        await ctx.send(f"{ctx.message.author.mention} YEET!\nhttps://youtu.be/mbDkgGv-vJ4?t=4")
 
 def setup(bot):
     bot.add_cog(FunCog(bot))
