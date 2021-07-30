@@ -152,10 +152,20 @@ class InfoCog(commands.Cog):
         """
         Tells you when you joined the server using UTC
         """
-        member = ctx.author
-        await ctx.send(
-            f"Time {member.mention} joined {ctx.guild.name} in UTC:\n{member.joined_at}"
-        )
+        members = ctx.message.mentions
+        message = ""
+        if len(members) < 1:
+            members = [ ctx.author ]
+
+        for member in members:
+            if len(message) > 0:
+                message += "\n\n"
+            message += f"{member.mention} joined {ctx.guild.name}\n{member.joined_at}"
+
+        if len(message) > 2000:
+            message = "Too many members to check"
+
+        await ctx.send(message)
 
     @commands.command()
     async def whoisjoe(self, ctx):
