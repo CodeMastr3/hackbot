@@ -78,7 +78,8 @@ class InfoCog(commands.Cog):
         Will default to United States
         """
         url = "https://www.howmanyvaccinated.com/vaccine"
-        states_url = "https://promotions.newegg.com/EC/covid19/vaccination/vaccina.json"
+        #states_url = "https://promotions.newegg.com/EC/covid19/vaccination/vaccina.json"
+        states_url = "https://covid.cdc.gov/covid-data-tracker/COVIDData/getAjaxData?id=vaccination_data"
 
         page = requests.get(url)
         states_page = requests.get(states_url)
