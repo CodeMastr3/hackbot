@@ -57,8 +57,7 @@ class InfoCog(commands.Cog):
         """
         current = time.time()
         delta = current - self.start_time
-        await ctx.send(f"Bot has been {self.pretty_print_uptime(delta)}\nServer has \
-        been {self.get_server_uptime()}")
+        await ctx.send(f"Bot has been {self.pretty_print_uptime(delta)}\nServer has been {self.get_server_uptime()}")
 
     """
     @commands.command()
