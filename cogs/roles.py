@@ -65,7 +65,7 @@ class RolesCog(commands.Cog):
     async def serverroles(self, ctx):
         """
         Lists the roles that this bot can add you to
-        To add any role(s) to yourself, please view !add and !sub
+        To add any role(s) to yourself, please view !add and !del
         """
         roles = self.bot_roles(ctx, ignore_preamble=False)
         bs = "\n" #bs stands for "Backslash" but it's bs i can't do a \n in {} for f-strings
@@ -176,13 +176,13 @@ class RolesCog(commands.Cog):
         #Message back to user
         await ctx.send(f"{member.mention}:\n{msg}")
 
-    #Sub roles for a user
-    @commands.command(pass_context=True, name="sub", aliases=['rm', 'del'])
+    #Remove roles for a user
+    @commands.command(pass_context=True, name="del", aliases=['rm'])
     async def sub(self, ctx, *args):
         """
-        Subtracts any roles mentioned after sub if they exist say all for all possible roles to remove
+        Subtracts any roles mentioned after del if they exist say all for all possible roles to remove
         One or many roles may be requested at a single time
-        e.g. !sub role1 role2 role3
+        e.g. !del role1 role2 role3
         """
         r_success = []
         r_fail = []
