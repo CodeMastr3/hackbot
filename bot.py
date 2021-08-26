@@ -275,7 +275,7 @@ async def on_member_join(member):
     msg5 = f"You have already been added to the \
         {announcementChanName} role, so that you can keep up to date on any events\
          that might be happening and things you might want to be aware of. \
-         Feel free to remove yourself from this role by saying `!sub \
+         Feel free to remove yourself from this role by saying `!del \
          {announcementChanName}` in {botChannel.mention}"
     msg5 = " ".join(msg5.split())
     msgList = [msg1, msg2, msg3, msg4, msg5]
