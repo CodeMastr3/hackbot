@@ -151,18 +151,6 @@ class OwO:
 
 o = OwO()
 
-@bot.command(hidden=True)
-async def joeis(ctx, *, arg):
-    """
-    Will alter the output from whoisjoe
-    """
-    #Alter memory copy
-    json_db['whoisjoe'] = arg
-    #Write to FS
-    with open(json_file, 'w') as f:
-        json.dump(json_db, f)
-    await ctx.message.delete()
-
 @bot.command(pass_context=True)
 async def owo(ctx, arg1=""):
     """
