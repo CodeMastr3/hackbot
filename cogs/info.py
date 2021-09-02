@@ -177,6 +177,19 @@ class InfoCog(commands.Cog):
         else:
             await ctx.send("JOE MAMA")
 
+    @commands.command(hidden=True)
+    async def joeis(self, ctx, *, arg):
+        """
+        Will alter the output from whoisjoe
+        """
+        json_file = "db.json"
+        #Alter memory copy
+        self.json_db['whoisjoe'] = arg
+        #Write to FS
+        with open(json_file, 'w') as f:
+            json.dump(self.json_db, f)
+        await ctx.message.delete()
+
     @commands.command()
     async def prse(self, ctx):
         """
@@ -188,7 +201,10 @@ class InfoCog(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, payload):
         max_tickers = 10 # adjusts the max amount of tickers the bot will fetch
-        msg_str = await payload.channel.fetch_message(payload.id)
+        try: 
+            msg_str = await payload.channel.fetch_message(payload.id)
+        except:
+            return
         msg_str = msg_str.content
 
         output_msg = ""
