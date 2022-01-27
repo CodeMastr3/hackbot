@@ -57,8 +57,7 @@ class InfoCog(commands.Cog):
         """
         current = time.time()
         delta = current - self.start_time
-        await ctx.send(f"Bot has been {self.pretty_print_uptime(delta)}\nServer has \
-        been {self.get_server_uptime()}")
+        await ctx.send(f"Bot has been {self.pretty_print_uptime(delta)}\nServer has been {self.get_server_uptime()}")
 
     """
     @commands.command()
@@ -78,7 +77,8 @@ class InfoCog(commands.Cog):
         Will default to United States
         """
         url = "https://www.howmanyvaccinated.com/vaccine"
-        states_url = "https://promotions.newegg.com/EC/covid19/vaccination/vaccina.json"
+        #states_url = "https://promotions.newegg.com/EC/covid19/vaccination/vaccina.json"
+        states_url = "https://covid.cdc.gov/covid-data-tracker/COVIDData/getAjaxData?id=vaccination_data"
 
         page = requests.get(url)
         states_page = requests.get(states_url)
@@ -152,10 +152,20 @@ class InfoCog(commands.Cog):
         """
         Tells you when you joined the server using UTC
         """
-        member = ctx.author
-        await ctx.send(
-            f"Time {member.mention} joined {ctx.guild.name} in UTC:\n{member.joined_at}"
-        )
+        members = ctx.message.mentions
+        message = ""
+        if len(members) < 1:
+            members = [ ctx.author ]
+
+        for member in members:
+            if len(message) > 0:
+                message += "\n\n"
+            message += f"{member.mention} joined {ctx.guild.name}\n{member.joined_at}"
+
+        if len(message) > 2000:
+            message = "Too many members to check"
+
+        await ctx.send(message)
 
     @commands.command()
     async def whoisjoe(self, ctx):
@@ -166,6 +176,19 @@ class InfoCog(commands.Cog):
             await ctx.send(self.json_db['whoisjoe'])
         else:
             await ctx.send("JOE MAMA")
+
+    @commands.command(hidden=True)
+    async def joeis(self, ctx, *, arg):
+        """
+        Will alter the output from whoisjoe
+        """
+        json_file = "db.json"
+        #Alter memory copy
+        self.json_db['whoisjoe'] = arg
+        #Write to FS
+        with open(json_file, 'w') as f:
+            json.dump(self.json_db, f)
+        await ctx.message.delete()
 
     @commands.command()
     async def prse(self, ctx):
@@ -178,7 +201,10 @@ class InfoCog(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, payload):
         max_tickers = 10 # adjusts the max amount of tickers the bot will fetch
-        msg_str = await payload.channel.fetch_message(payload.id)
+        try: 
+            msg_str = await payload.channel.fetch_message(payload.id)
+        except:
+            return
         msg_str = msg_str.content
 
         output_msg = ""
