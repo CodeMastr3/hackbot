@@ -151,7 +151,7 @@ class InfoCog(commands.Cog):
     @commands.command()
     async def classes(self, ctx, class_name="CSCI-111"):
         """
-        Will query CSU Chico's Class schedule to show info about classes. Format: 'CSCI-111' or 'csci-301'
+        Will query CSU Chico's Class schedule to show info about classes. Format: 'CSCI-111' or 'cins_465'
         """
         message = ""
         try:
@@ -182,20 +182,22 @@ class InfoCog(commands.Cog):
                     for class_time in class_found['meetings']:
                         try:
                             class_msg += f"\t{class_time['days']}\n"
-                            start_hour, start_minute, start_second, excess = class_time['start_time'].split('.')
+
+                            start_hour, start_minute, excess = class_time['start_time'].split('.', 2)
                             start_hour_int = int(start_hour) if int(start_hour) <= 12 else int(start_hour) % 12
                             start_M = "PM" if int(start_hour) >= 12 else "AM"
                             class_msg += f"\t{start_hour_int}:{start_minute} {start_M}"
 
-                            end_hour, end_minute, end_second, excess = class_time['end_time'].split('.')
+                            end_hour, end_minute, excess = class_time['end_time'].split('.', 2)
                             end_hour_int = int(end_hour) if int(end_hour) <= 12 else int(end_hour) % 12
                             end_M = "PM" if int(end_hour) >= 12 else "AM"
+
                             class_msg += f"\t{end_hour_int}:{end_minute} {end_M}\n--------------------------------\n"
                         except:
                             pass
                         message += class_msg
         else:
-            message += "Failed to retrieve data from server"
+            message = "Failed to retrieve data from server"
         if len(message) > 2000:
             message = "Holy cow there were too many classes to list! Try a more specific search."
         await ctx.send(message)
@@ -206,6 +208,7 @@ class InfoCog(commands.Cog):
         Used for the classes command, uses current date to determine the term number to be
         used in parameters
         """
+        # Mod can be used to change the relative term. Don't have the energy currently to implement
         today_term = datetime.now()
         add_sem = 0
         if mod % 2 == 1:
