@@ -234,16 +234,23 @@ async def uwu(ctx, arg1=""):
     await ctx.send(message)
 
 @bot.command(hidden=True)
-@commands.has_any_role('Cody', 'Dallas')
+@commands.check_any(commands.has_any_role('Cody', 'Dallas'), commands.is_owner())
 async def logout(ctx):
     """
     Logs the bot out
     """
-    await bot.logout()
+    await bot.close()
+    print("Bot Closed")
 
 @logout.error
 async def logout_error(ctx, error):
-    await ctx.channel.send("You don't have the permission to run that command")
+    if isinstance(error, commands.MissingAnyRole):
+        message = f"You don't have permission to run this command"
+    elif isinstance(error, commands.NotOwner):
+        message = f"This command is for the owner"
+    else:
+        message = f"Something has gone wrong"
+    await ctx.send(message)
 
 @bot.event
 async def on_member_join(member):
