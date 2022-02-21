@@ -220,6 +220,7 @@ class FunCog(commands.Cog):
                 await ctx.send("https://c.tenor.com/d0VNnBZkSUkAAAAM/bongocat-banhammer.gif")
                 return
         await ctx.send(message)
+
     @commands.command(pass_context=True)
     async def yeet(self, ctx):
         '''
