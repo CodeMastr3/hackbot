@@ -147,6 +147,81 @@ class InfoCog(commands.Cog):
                 return s
         return None
 
+
+    @commands.command()
+    async def classes(self, ctx, class_name="CSCI-111"):
+        """
+        Will query CSU Chico's Class schedule to show info about classes. Format: 'CSCI-111' or 'cins_465'
+        """
+        message = ""
+        try:
+            subject, catalog_nbr = re.split('-|_', class_name, 1)
+            subject = subject.upper()
+        except:
+            message += f"Failed to parse {class_name}, failing..."
+            await ctx.send(message)
+            return None
+        url = "https://cmsweb.csuchico.edu/psc/CCHIPRD/EMPLOYEE/SA/s/WEBLIB_HCX_CM.H_CLASS_SEARCH.FieldFormula.IScript_ClassSearch?"
+        params = {
+            'institution': 'CHICO',
+            'term': self.get_term(0),
+            'subject': subject,
+            'catalog_nbr': catalog_nbr,
+        }
+        class_result = requests.get(url, params)
+        if class_result.status_code == 200:
+            class_dict = class_result.json()
+            message += f"Search results for {class_name}:\n"
+            if not bool(class_dict):
+                message += "No classes found with that Subject and Catalog Number"
+            else:
+                for class_found in class_dict:
+                    class_msg = ""
+                    prof = class_found['instructors'][0]['name']
+                    class_msg += f"{class_found['subject']}-{class_found['catalog_nbr']} {class_found['component']} Section {class_found['class_section']}: \t{prof}\n"
+                    for class_time in class_found['meetings']:
+                        try:
+                            class_msg += f"\t{class_time['days']}\n"
+
+                            start_hour, start_minute, excess = class_time['start_time'].split('.', 2)
+                            start_hour_int = int(start_hour) if int(start_hour) <= 12 else int(start_hour) % 12
+                            start_M = "PM" if int(start_hour) >= 12 else "AM"
+                            class_msg += f"\t{start_hour_int}:{start_minute} {start_M}"
+
+                            end_hour, end_minute, excess = class_time['end_time'].split('.', 2)
+                            end_hour_int = int(end_hour) if int(end_hour) <= 12 else int(end_hour) % 12
+                            end_M = "PM" if int(end_hour) >= 12 else "AM"
+
+                            class_msg += f"\t{end_hour_int}:{end_minute} {end_M}\n--------------------------------\n"
+                        except:
+                            pass
+                        message += class_msg
+        else:
+            message = "Failed to retrieve data from server"
+        if len(message) > 2000:
+            message = "Holy cow there were too many classes to list! Try a more specific search."
+        await ctx.send(message)
+        return None
+
+    def get_term(self, mod):
+        """
+        Used for the classes command, uses current date to determine the term number to be
+        used in parameters
+        """
+        # Mod can be used to change the relative term. Don't have the energy currently to implement
+        today_term = datetime.now()
+        add_sem = 0
+        if mod % 2 == 1:
+            mod -= 1
+            if today_term.month < 6:
+                add_sem = 6
+            else:
+                add_sem = 4
+        add_year = abs(int(mod/2))
+        coeff = 1 if mod > 0 else -1
+        term = ((today_term.year + add_year) % 2022)*10*coeff + 2222 + add_sem
+        return str(term)
+
     @commands.command()
     async def joined(self, ctx):
         """
