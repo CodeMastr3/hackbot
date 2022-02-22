@@ -220,13 +220,39 @@ class FunCog(commands.Cog):
                 await ctx.send("https://c.tenor.com/d0VNnBZkSUkAAAAM/bongocat-banhammer.gif")
                 return
         await ctx.send(message)
-
+    
     @commands.command(pass_context=True)
     async def yeet(self, ctx):
         '''
         YEET
         '''
         await ctx.send(f"{ctx.message.author.mention} YEET!\nhttps://youtu.be/mbDkgGv-vJ4?t=4")
+  
+    @commands.command(pass_context=True)
+    async def mock(self, ctx):
+        """MoCk sOmEonE's StuPiD IdEa"""
+        command_name = "!mock "
+        message_text = ctx.message.content[len(command_name):].lower()
+        mock_text = ""
+
+        mock_has_text = False
+        if len(message_text.split(" ")) > 1:
+            mock_has_text = True
+
+        if not mock_has_text:
+            channel = ctx.channel
+            prev_message = await channel.history(limit=2).flatten()
+            message_text = prev_message[1].content.lower()
+
+        for i in range(0, len(message_text)):
+            p = randint(1, 3)
+            # 1 in 3 chance of letter being capitalized
+            if p == 3:
+                mock_text += message_text[i].upper()
+            else:
+                mock_text += message_text[i]
+
+        await ctx.send(mock_text)
 
 def setup(bot):
     bot.add_cog(FunCog(bot))
