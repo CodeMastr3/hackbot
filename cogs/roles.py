@@ -59,7 +59,7 @@ class RolesCog(commands.Cog):
         for role in iterroles:
             s += role.name
             s += "\n"
-        await ctx.send(f"Your roles:\n{s}")
+        await ctx.reply(f"Your roles:\n{s}")
 
     @commands.command(name='serverroles', aliases=['sr'])
     async def serverroles(self, ctx):
@@ -174,7 +174,7 @@ class RolesCog(commands.Cog):
             msg = "I did nothing"
 
         #Message back to user
-        await ctx.send(f"{member.mention}:\n{msg}")
+        await ctx.reply(f"{msg}")
 
     #Remove roles for a user
     @commands.command(pass_context=True, name="del", aliases=['rm'])
@@ -228,7 +228,43 @@ class RolesCog(commands.Cog):
             msg = "I did nothing"
 
         #Message back to user
-        await ctx.send(f"{member.mention}:\n{msg}")
+        await ctx.reply(f"{msg}")
+
+    @commands.command(pass_context=True, name="private")
+    async def private(self, ctx, *args):
+        """
+        Removes a message that the bot had sent
+        """
+        member = ctx.author
+        author = self.bot.user
+        channel = ctx.channel
+        message = ctx.message
+        if len(args) >= 2:
+            for arg in args:
+                deletion = await channel.fetch_message(arg)
+                mentioned = deletion.mentions
+                if member in mentioned and deletion.author == author:
+                    await discord.Message.delete(deletion)
+                else:
+                    sent = await ctx.reply("You can't delete that message")
+                    await sent.delete(delay=5)
+                await message.delete(delay=5)
+        elif message.reference is not None:
+            deletion = await channel.fetch_message(message.reference.resolved.id)
+            if member in deletion.mentions and deletion.author == author:
+                await discord.Message.delete(deletion)
+            else:
+                sent = await ctx.reply("You can't delete that message")
+                await sent.delete(delay=5)
+            await message.delete(delay=5)
+        else:
+            deletion = await channel.history(limit=2).flatten()
+            if member in deletion[1].mentions and deletion[1].author == author:
+                await discord.Message.delete(deletion[1])
+            else:
+                sent = await ctx.reply("You can't delete that message")
+                await sent.delete(delay=5)
+            await message.delete(delay=5)
 
 def setup(bot):
     bot.add_cog(RolesCog(bot))
