@@ -181,7 +181,7 @@ class InfoCog(commands.Cog):
                     class_msg += f"{class_found['subject']}-{class_found['catalog_nbr']} {class_found['component']} Section {class_found['class_section']}: \t{prof}\n"
                     for class_time in class_found['meetings']:
                         try:
-                            class_msg += f"\t{class_time['days']}\n"
+                            class_msg += f"\t{class_time['days']}\t{class_time['bldg_cd']} {class_time['room']}\n"
 
                             start_hour, start_minute, excess = class_time['start_time'].split('.', 2)
                             start_hour_int = int(start_hour) if int(start_hour) <= 12 else int(start_hour) % 12
