@@ -1,9 +1,11 @@
 import ast
 import discord
 import sys
+import Levenshtein
 sys.path.append("..")
 from emojiRole import message as emojiRolemessage
 from discord.ext import commands
+from operator import itemgetter
 
 #Role Commands for the bot
 
@@ -131,6 +133,7 @@ class RolesCog(commands.Cog):
         r_success = []
         r_fail = []
         r_had = []
+        r_poss = []
         member = ctx.author
         br = self.bot_roles(ctx)
 
@@ -144,13 +147,22 @@ class RolesCog(commands.Cog):
                         pass #Don't care about extraneous roles
         else:
             #Attempt to add users roles
+            levDict = {}
             for arg in args:
-                role = discord.utils.get(ctx.guild.roles, name=arg)
+                # Right here is where the checking would go first
+                arg = arg.lower()
+                if arg == "allclass":
+                    role = discord.utils.get(ctx.guild.roles, name="allClass")
+                else:
+                    role = discord.utils.get(ctx.guild.roles, name=arg)
+                if role == None:
+                    for possible in br:
+                        levDict.update({possible.name : Levenshtein.distance(possible.name, arg)})
                 if role not in br: #Check if it's an accepted role first
                     r_fail += [arg]
-
                 else:
                     try:
+                        arg = role.name
                         #Check if user already had role
                         if not self.has_role(ctx, role):
                             await member.add_roles(role)
@@ -159,6 +171,10 @@ class RolesCog(commands.Cog):
                             r_had += [arg]
                     except:
                         r_fail += [arg]
+            if levDict:
+                for value in sorted(levDict.items(), key=itemgetter(1))[:2]:
+                    if 3 > value[1]:
+                        r_poss += [value[0]]               
 
         msg = ""
         if r_success:
@@ -167,6 +183,8 @@ class RolesCog(commands.Cog):
             msg += f"You were already in the role(s): {' '.join(r_had)}\n"
         if r_fail:
             msg += f"I have failed to add the role(s): {' '.join(r_fail)}\n"
+        if r_poss:
+            msg += f"Did you mean to put: **{'** or **'.join(r_poss)}**\n"
         if r_fail:
             msg += "Please use !serverroles to check available roles and spelling\n"
 
@@ -187,6 +205,7 @@ class RolesCog(commands.Cog):
         r_success = []
         r_fail = []
         r_had = []
+        r_poss = []
         member = ctx.author
         br = self.bot_roles(ctx)
         if "all" in args:
@@ -198,13 +217,23 @@ class RolesCog(commands.Cog):
                     except:
                         pass #Don't care about extraneous roles
         else:
+            levDict = {}
             for arg in args:
-                role = discord.utils.get(ctx.guild.roles, name=arg)
+                # Right here is where the checking would go first
+                arg = arg.lower()
+                if arg == "allclass":
+                    role = discord.utils.get(ctx.guild.roles, name="allClass")
+                else:
+                    role = discord.utils.get(ctx.guild.roles, name=arg)
+                if role == None:
+                    for possible in member.roles:
+                        levDict.update({possible.name : Levenshtein.distance(possible.name, arg)})
                 if role not in br: #Check if it's an accepted role first
                     r_fail += [arg]
 
                 else:
                     try:
+                        arg = role.name
                         #Check if user didn't already have role
                         if self.has_role(ctx, role):
                             await member.remove_roles(role)
@@ -213,6 +242,11 @@ class RolesCog(commands.Cog):
                             r_had += [arg]
                     except:
                         r_fail += [arg]
+            if levDict:
+                for value in sorted(levDict.items(), key=itemgetter(1))[:2]:
+                    if 3 > value[1]:
+                        r_poss += [value[0]]
+            
 
         msg = ""
         if r_success:
@@ -221,6 +255,8 @@ class RolesCog(commands.Cog):
             msg += f"You were not in the role(s): {' '.join(r_had)}\n"
         if r_fail:
             msg += f"I have failed to remove the role(s): {' '.join(r_fail)}\n"
+        if r_poss:
+            msg += f"Did you mean to put: **{'** or **'.join(r_poss)}**\n"
         if r_had or r_fail:
             msg += "Please use !myroles to double check roles you are in and spelling\n"
 
