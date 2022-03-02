@@ -26,6 +26,17 @@ except:
 
 announcementChanName = "Announcement"
 
+immuwune = []
+
+if ('uwu_immune' in json_db.keys()):
+    immuwune = json_db['uwu_immune']
+else:
+    print("There appears to be a distinct lack of people who are not immuwune. UwU")
+
+def write_db():
+    with open(json_file, 'w') as f:
+        json.dump(json_db, f)
+
 # Bot Setup -- Attempt to set up greeting. If it fails, then go without it
 intents = discord.Intents(messages=True, guilds=True)
 try:
@@ -104,9 +115,29 @@ json_db['uwu_substitutions'] = {
     'do ' : 'dowo ',
 }
 
+
 #Write to FS
-with open(json_file, 'w') as f:
-    json.dump(json_db, f)
+write_db()
+
+@bot.command(pass_context=True)
+async def immuwunize(ctx):
+    """
+    Adds you to the list of immuwunized individuals (or removes you if you're already on it). Like a vaccine for the UwU.
+    The difference here is that you can choose to deimmuwunize yourself.
+    """
+    author = ctx.author
+    member = author.name + author.discriminator
+
+    if member not in immuwune:
+        immuwune.append(member)
+        await ctx.send(f"{author.mention} You have successfully been immuwunized OwO")
+    else:
+        immuwune.remove(member)
+        await ctx.send(f"{author.mention} You have successfully been deimmuwunized UwU")
+    
+    json_db["uwu_immune"] = immuwune
+    write_db()
+
 
 # the following code is 100% stolen from @DerpyChap on GitHub with no shame
 # https://github.com/DerpyChap/owotext/blob/master/owotext/owo.py
@@ -207,23 +238,23 @@ async def uwu(ctx, arg1=""):
 
         if(not argIsText):
             message = await channel.fetch_message(msg_id)
-            if "uwu-immune" in [r.name.lower() for r in message.author.roles]:
-                await ctx.send("UwU this usew is uwu-immune! sowwy... 😭")
+            if message.author.name + message.author.discriminator in immuwune:
+                await ctx.send("UwU this usew is imuwumune! sowwy... 😭")
                 return
             else:
                 message = message.content
         else:
             # arg1 is original text that wants to be uwu-ized
-            if "uwu-immune" in [r.name.lower() for r in ctx.message.author.roles]:
-                await ctx.send("UwU you'we immune to the uwu! sowwy... 😭")
+            if ctx.message.author.name + ctx.message.author.discriminator in immuwune:
+                await ctx.send("UwU you'we imuwumune! sowwy... 😭")
                 return
             else:
                 message = ctx.message.content.split(' ', 1)[1]
     else:
         # arg1 is nothing (grab the previous message)
         message = await channel.history(limit=2).flatten()
-        if "uwu-immune" in [r.name.lower() for r in message[1].author.roles]:
-            await ctx.send("UwU this usew is uwu-immune! sowwy... 😭")
+        if message[1].author.name + message[1].author.discriminator in immuwune:
+            await ctx.send("UwU this usew is immuwune! sowwy... 😭")
             return
         else:
             message = message[1].content
