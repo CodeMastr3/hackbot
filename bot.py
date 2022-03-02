@@ -1,4 +1,3 @@
-from click import pass_context
 import discord
 import discord.utils
 import ast
