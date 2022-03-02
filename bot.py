@@ -239,14 +239,14 @@ async def uwu(ctx, arg1=""):
         if(not argIsText):
             message = await channel.fetch_message(msg_id)
             if message.author.name + message.author.discriminator in immuwune:
-                await ctx.send("UwU this usew is uwu-immune! sowwy... 😭")
+                await ctx.send("UwU this usew is imuwumune! sowwy... 😭")
                 return
             else:
                 message = message.content
         else:
             # arg1 is original text that wants to be uwu-ized
             if ctx.message.author.name + ctx.message.author.discriminator in immuwune:
-                await ctx.send("UwU you'we immune to the uwu! sowwy... 😭")
+                await ctx.send("UwU you'we imuwumune! sowwy... 😭")
                 return
             else:
                 message = ctx.message.content.split(' ', 1)[1]
@@ -254,7 +254,7 @@ async def uwu(ctx, arg1=""):
         # arg1 is nothing (grab the previous message)
         message = await channel.history(limit=2).flatten()
         if message[1].author.name + message[1].author.discriminator in immuwune:
-            await ctx.send("UwU this usew is uwu-immune! sowwy... 😭")
+            await ctx.send("UwU this usew is immuwune! sowwy... 😭")
             return
         else:
             message = message[1].content
