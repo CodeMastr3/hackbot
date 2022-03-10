@@ -234,26 +234,49 @@ class FunCog(commands.Cog):
         command_name = "!mock "
         message_text = ctx.message.content[len(command_name):].lower()
         mock_text = ""
+        channel = ctx.channel
 
+        argIsText = False
         mock_has_text = False
+        # Shamelessly stolen from the uwu command
         if len(ctx.message.content.split(" ")) > 1:
             mock_has_text = True
+            msg_id = message_text
+            if(msg_id.isnumeric()):
+                # arg1 is a message ID
+                msg_id = int(message_text)
+            elif(message_text.find('-') != -1):
+                text = message_text.rsplit('-', 1)[1]
+                if(text.isnumeric()):
+                    # arg1 is a message ID in the form of <channelID>-<messageID>
+                    msg_id = int(text)
+                else:
+                    argIsText = True
+            elif(message_text.find('/') != -1):
+                text = message_text.rsplit('/', 1)[1]
+                if(text.isnumeric()):
+                    # arg1 is a link to a message
+                    msg_id = int(text)
+                else:
+                    argIsText = True
+            else:
+                argIsText = True
 
         if not mock_has_text:
-            channel = ctx.channel
             prev_message = await channel.history(limit=2).flatten()
             message_text = prev_message[1].content.lower()
+        elif not argIsText:
+            message_text = await channel.fetch_message(msg_id)
+            message_text = message_text.content.lower()
 
-        p = 0
         for i in range(0, len(message_text)):
-            # Every third letter capitalized
-            if p == 2:
+            p = randint(0, 1)
+            
+            if p == 1:
                 mock_text += message_text[i].upper()
-                p = 0
                 continue
             else:
                 mock_text += message_text[i]
-            p += 1
 
         await ctx.send(mock_text)
 
