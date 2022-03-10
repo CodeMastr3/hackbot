@@ -236,7 +236,7 @@ class FunCog(commands.Cog):
         mock_text = ""
 
         mock_has_text = False
-        if len(message_text.split(" ")) > 1:
+        if len(ctx.message.content.split(" ")) > 1:
             mock_has_text = True
 
         if not mock_has_text:
@@ -244,13 +244,16 @@ class FunCog(commands.Cog):
             prev_message = await channel.history(limit=2).flatten()
             message_text = prev_message[1].content.lower()
 
+        p = 0
         for i in range(0, len(message_text)):
-            p = randint(1, 3)
-            # 1 in 3 chance of letter being capitalized
-            if p == 3:
+            # Every third letter capitalized
+            if p == 2:
                 mock_text += message_text[i].upper()
+                p = 0
+                continue
             else:
                 mock_text += message_text[i]
+            p += 1
 
         await ctx.send(mock_text)
 
