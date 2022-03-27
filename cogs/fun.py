@@ -1,7 +1,5 @@
-import discord
 from discord.ext import commands
 from random import randint, choice
-
 
 
 class FunCog(commands.Cog):
@@ -279,6 +277,7 @@ class FunCog(commands.Cog):
                 mock_text += message_text[i]
 
         await ctx.send(mock_text)
+
 
 def setup(bot):
     bot.add_cog(FunCog(bot))

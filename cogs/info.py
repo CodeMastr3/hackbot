@@ -9,6 +9,8 @@ import re#eeeeee
 from datetime import datetime
 from discord.ext import commands
 from random import seed
+import qrcode
+import os
 
 class InfoCog(commands.Cog):
     seed(datetime.now())
@@ -332,6 +334,74 @@ class InfoCog(commands.Cog):
         channel = payload.channel #await discord.Client.fetch_channel(Cog, payload.channel.id)
         await channel.send(output_msg)
 
+    @commands.command()
+    async def qr(self, ctx):
+        """
+        Create a QR code
+
+        Args:
+        text: plain text or URL string
+        settings: plain text argument preceded by double-dash (--)
+            Options are:
+            - border: int
+            - fill_color/fill/fg/foreground: rgb tuple, i.e. (RRR, GGG, BBB)
+            - back_color/back/bg/background: rgb tuple, i.e. (RRR, GGG, BBB)
+        
+        ex. > qr text fill (120, 120, 120) back (255, 255, 255)
+        """
+        # Default QR code settings
+        fg_color = (0, 0, 0)
+        bg_color = (255, 255, 255)
+        border = 2
+
+        # The entire command
+        message_text = ctx.message.content
+
+        # Text to be encoded (can be plain text or URL)
+        text = message_text
+        # Remove command prefix and options, leaving only the text
+        text = text.replace(f"!qr", "")
+        text = re.subn(r"--\w+ \(\d{1,3}, ?\d{1,3}, ?\d{1,3}\)|--\w+ \d+", "", text)[0]
+        text = text.strip()
+
+        # Ensure there is text to encode
+        if not text:
+            await ctx.message.reply("I need text to put into a QR code.")
+
+        print(f"Searching {message_text} for args")
+        # Get arguments for command, if any
+        settings = re.findall(r"(--\w+) (\(\d{1,3}, ?\d{1,3}, ?\d{1,3}\)|\d+)", message_text)
+        if settings:
+            # Each arg must have a corresponding value, otherwise return an error
+            for opt in settings:
+                if (len(opt)%2 != 0):
+                    await ctx.message.reply("One or more of your arguments doesn't have a value attached. Double check your command!")
+                    return
+            
+            print("Settings:")
+            for opt in settings:
+                print(opt)
+                if opt[0] in ["--fill", "--fill_color", "--fg", "--foreground"]:
+                    fg_color = eval(opt[1])
+                elif opt[0] in ["--back", "--back_color", "--bg", "--background"]:
+                    bg_color = eval(opt[1])
+                elif opt[0] in ["--border"]:
+                    border = eval(opt[1])
+        else:
+            print("No settings provided for QR call")
+
+        # Final code generation
+        qr = qrcode.QRCode(
+            border=border
+        )
+        qr.add_data(text)
+        img = qr.make_image(fill_color=fg_color, back_color=bg_color)
+        # Save image to system temporarily while it gets attached to this reply
+        img.save("qrcode.png")
+        file = discord.File("qrcode.png")
+        await ctx.message.reply(file=file, content=f"Here's your QR code for '{text}':")
+        # Remove it once that's completed
+        os.remove("qrcode.png")
 
 def setup(bot):
     bot.add_cog(InfoCog(bot))
