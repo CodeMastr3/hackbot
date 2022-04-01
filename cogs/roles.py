@@ -151,8 +151,13 @@ class RolesCog(commands.Cog):
             for arg in args:
                 # Right here is where the checking would go first
                 arg = arg.lower()
+                #FIXME -- hard coded case conditions are bad code.
                 if arg == "allclass":
                     role = discord.utils.get(ctx.guild.roles, name="allClass")
+                elif arg == "aluminum":
+                    role = discord.utils.get(ctx.guild.roles, name="Aluminum")
+                elif arg == "announcement":
+                    role = discord.utils.get(ctx.guild.roles, name="Announcement")
                 else:
                     role = discord.utils.get(ctx.guild.roles, name=arg)
                 if role == None:
