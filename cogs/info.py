@@ -286,7 +286,7 @@ class InfoCog(commands.Cog):
         output_msg = ""
 
         # ignore user commands, as well as responses by the bot
-        if(msg_str[0] == "!" or payload.author.bot):
+        if(payload.author.bot or msg_str[0] == "!" ):
             return
 
         matches = re.finditer("\$[a-zA-Z]+", msg_str)

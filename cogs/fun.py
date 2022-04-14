@@ -1,5 +1,9 @@
+import aiohttp, urllib.parse
+from discord import Embed
 from discord.ext import commands
 from random import randint, choice
+
+from requests import request
 
 
 class FunCog(commands.Cog):
@@ -278,6 +282,31 @@ class FunCog(commands.Cog):
 
         await ctx.send(mock_text)
 
+    @commands.command(pass_context=True)
+    async def wiki(self, ctx):
+        """ Gets the wikipedia article that is the closest match for the given text """
+        em = Embed
+        if(len(ctx.message.content.split(" ")) > 1):
+            requested_article = "_".join(ctx.message.content.split()[1:]).lower() # splits and rejoins message_text into the format needed for the query
+            urllib.parse.quote(requested_article)
+            query = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=1&explaintext=1&format=json&titles=%s' % requested_article
+            async with aiohttp.ClientSession() as session:
+                async with session.get(query) as response:
+                    content = await response.json()
+                    if(list(content['query']['pages'].keys())[0] != '-1'):
+                        article = list(content['query']['pages'].values())[0] # gets the content of the article
+                        article_extract = article['extract'][:article['extract'].find('\n')] # gets just the first paragraph of the article
+                        if article_extract == '':
+                            article_extract = 'No content returned.'
+                        em = Embed(title=article['title'], description=article_extract)
+                        article_url = 'https://en.wikipedia.org/wiki/%s' % requested_article
+                        em.add_field(name='URL', value=article_url)
+                    else:
+                        em = Embed(title='No page found for %s' % requested_article)
+        else:
+            em = Embed(title='No page given')
+        await ctx.send(embed=em)
+        
 
 def setup(bot):
     bot.add_cog(FunCog(bot))
