@@ -289,17 +289,20 @@ class FunCog(commands.Cog):
 
 
         if(len(message_text) > 0):
-            article = "_".join(message_text.split()) # splits and rejoins message_text into the format needed for the query
-            query = 'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&explaintext&titles=%s' % article
+            requested_article = "_".join(message_text.split()) # splits and rejoins message_text into the format needed for the query
+            query = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=1&explaintext=1&format=json&titles=%s' % requested_article
             async with aiohttp.ClientSession() as session:
                 async with session.get(query) as response:
                     content = await response.json()
                     if(content['query']['pages'].keys()[0] != -1):
-                        ctx.send(content['query']['pages'])
+                        article = list(content['query']['pages'].values())[0] # gets the content of the article
+                        em.title = article['title']
+                        em.add_field = article['extract']
                     else:
-                        ctx.send('page does not exist')
+                        em.title = 'No page found for %s' % requested_article
         else:
-            ctx.send('no')
+            em.title = 'No page given'
+        ctx.send(em)
         
 
 def setup(bot):
