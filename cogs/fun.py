@@ -1,3 +1,5 @@
+import aiohttp
+from discord import Embed
 from discord.ext import commands
 from random import randint, choice
 
@@ -278,6 +280,27 @@ class FunCog(commands.Cog):
 
         await ctx.send(mock_text)
 
+    @commands.command(pass_context=True)
+    async def wiki(self, ctx):
+        """ Gets the wikipedia article that is the closest match for the given text """
+        command_name = "!wiki "
+        message_text = ctx.message.content[len(command_name):]
+        em = Embed
+
+
+        if(len(message_text) > 0):
+            article = "_".join(message_text.split()) # splits and rejoins message_text into the format needed for the query
+            query = 'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&explaintext&titles=%s' % article
+            async with aiohttp.ClientSession() as session:
+                async with session.get(query) as response:
+                    content = await response.json()
+                    if(content['query']['pages'].keys()[0] != -1):
+                        ctx.send(content['query']['pages'])
+                    else:
+                        ctx.send('page does not exist')
+        else:
+            ctx.send('no')
+        
 
 def setup(bot):
     bot.add_cog(FunCog(bot))
