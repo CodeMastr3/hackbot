@@ -154,13 +154,9 @@ class FunCog(commands.Cog):
             user_mentioned = mentions_list[0]
             if not self.is_user_self(user_mentioned):
                 # Check that the user being banned is not a professor.
-                # Get user's roles
-                roles_raw = ctx.message.guild.get_member(user_mentioned.id).roles
-                roles = []
-                # Turn into list, and lowercase it.
-                for role in roles_raw:
-                    roles.append(role.name)
-                roles_lower = [i.lower() for i in roles]
+                # Get user's roles then lowercase them
+                roles_raw = [i.name for i in list(user_mentioned.roles)]
+                roles_lower = [i.lower() for i in roles_raw]
                 # Tell users who try to ban a professor that they may not do so.
                 if "professors" in roles_lower:
                     message = ctx.message.author.mention + " you can't ban a professor."
