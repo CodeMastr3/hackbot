@@ -287,6 +287,7 @@ async def logout_error(ctx, error):
 async def on_member_join(member):
     botChannel = discord.utils.get(member.guild.channels, name='bot-stuff')
     rulesChannel = discord.utils.get(member.guild.channels, name='rules-and-info')
+    generalChannel = discord.utils.get(member.guild.channels, name = 'general')
     try:
         role = discord.utils.get(member.guild.roles, name=announcementChanName)
         await member.add_roles(role)
@@ -307,6 +308,17 @@ async def on_member_join(member):
     msgList = [msg1, msg2, msg3, msg4, msg5]
     msg = "\n".join(msgList)
     await botChannel.send(msg)
+
+
+    # welcome to the world of tomorrow!
+    generalMsg1 = f"Welcome to the world of tomorrow {member.mention}!"
+    generalMsg2 = f"https://tenor.com/view/welcome-to-the-world-of-tomorrow-futurama-gif-18101283"
+    msgList = [generalMsg1,generalMsg2]
+    msg = "\n".join(msgList)
+    await generalChannel.send(msg)
+
+    
+    #probably doesn't work, I wouldn't commit if I were you!!!
 
 @bot.command()
 @commands.has_any_role('Cody', 'Dallas')
