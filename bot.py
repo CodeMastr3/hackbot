@@ -312,9 +312,7 @@ async def on_member_join(member):
 
     # welcome to the world of tomorrow!
     generalMsg = f"https://tenor.com/view/welcome-to-the-world-of-tomorrow-futurama-gif-18101283"
-    msgList = [generalMsg]
-    msg = "\n".join(msgList)
-    await generalChannel.send(msg)
+    await generalChannel.send(generalMsg)
 
     
     #probably doesn't work, I wouldn't commit if I were you!!!
