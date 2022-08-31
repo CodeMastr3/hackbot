@@ -314,9 +314,7 @@ async def on_member_join(member):
     generalMsg = f"https://tenor.com/view/welcome-to-the-world-of-tomorrow-futurama-gif-18101283"
     await generalChannel.send(generalMsg)
 
-    
-    #probably doesn't work, I wouldn't commit if I were you!!!
-
+   
 @bot.command()
 @commands.has_any_role('Cody', 'Dallas')
 async def update(ctx):
