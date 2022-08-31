@@ -27,6 +27,15 @@ class FunCog(commands.Cog):
             f"today's controvesial opinion reward goes to {user_mentioned}. The prize? A ban, duh.",
             f"{user_mentioned} gotta ban you now. Sorry.",
             f"{user_mentioned} stop talking before you--oh, wait. Too late.",
+            
+            f"{user_mentioned}, really? I wish I could ban you more than once.",
+            f"Banned: the server has automatically banned you for saying a bad word.",
+            f"{user_mentioned} the game of hide and seek is over, tag, you're banned.",
+            
+            #gifs
+            f"https://tenor.com/view/ban-hammer-futurama-scruffy-gif-20750885",
+            f"https://tenor.com/view/ban-hammer-gif-19698183",
+            f"https://tenor.com/view/ban-banpain-yoshi-yoshi-ban-ban-atze-gif-20813985",
         ]
         ban_easter_eggs = [
             f"{user_mentioned} I WARNED YOU ABOUT STAIRS BRO. I TOLD YOU.",
