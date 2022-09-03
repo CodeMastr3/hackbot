@@ -2,12 +2,8 @@ import aiohttp, urllib.parse
 from discord import Embed
 from discord.ext import commands
 from random import randint, choice
-import random
 import json
-
-
-from requests import request
-
+import requests
 
 class FunCog(commands.Cog):
     def __init__(self, bot):
@@ -30,11 +26,9 @@ class FunCog(commands.Cog):
             f"today's controvesial opinion reward goes to {user_mentioned}. The prize? A ban, duh.",
             f"{user_mentioned} gotta ban you now. Sorry.",
             f"{user_mentioned} stop talking before you--oh, wait. Too late.",
-            
             f"{user_mentioned}, really? I wish I could ban you more than once.",
             f"Banned: the server has automatically banned you for saying a bad word.",
             f"{user_mentioned} the game of hide and seek is over, tag, you're banned.",
-            
         ]
         ban_easter_eggs = [
             f"{user_mentioned} I WARNED YOU ABOUT STAIRS BRO. I TOLD YOU.",
@@ -311,25 +305,16 @@ class FunCog(commands.Cog):
             em = Embed(title='No page given')
         await ctx.send(embed=em)
 
-
-    #136 different Cat Facts!
     @commands.command(pass_context=True)
-
     async def catfact(self,ctx):
-        with open('catfacts.json', 'r') as catfacts_file:
-            catfacts_json = catfacts_file.read()
-
-            CATFACTS_DICT = json.loads(catfacts_json)
-    
-            await ctx.send("Thanks for signing up for Cat Facts! You now will recive fun daily facts about Cats! >o<")
-
-            random_catfact = random.choice(CATFACTS_DICT)
-            await ctx.send(random_catfact)
-        
-
-
-
-        
+        catfactsurl=["https://raw.githubusercontent.com/vadimdemedes/cat-facts/master/cat-facts.json"]
+        catfactsBody = requests.get(url=choice(catfactsurl))
+        if not catfactsBody.ok:
+            await ctx.send(f"There seems to be some issues grabbing cat facts right now. So sorry!")
+            return
+        catfacts=json.loads(catfactsBody.text)
+        await ctx.send("Thanks for signing up for Cat Facts! You now will recive fun daily facts about Cats! >o<")
+        await ctx.send(choice(catfacts))
 
 def setup(bot):
     bot.add_cog(FunCog(bot))
