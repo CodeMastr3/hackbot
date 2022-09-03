@@ -1,6 +1,7 @@
 import aiohttp, urllib.parse
 from discord import Embed
 from discord.ext import commands
+from random import randint, choice
 import random
 import json
 
