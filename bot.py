@@ -308,13 +308,10 @@ async def on_member_join(member):
     msgList = [msg1, msg2, msg3, msg4, msg5]
     msg = "\n".join(msgList)
     await botChannel.send(msg)
-
-
     # welcome to the world of tomorrow!
     generalMsg = f"https://tenor.com/view/welcome-to-the-world-of-tomorrow-futurama-gif-18101283"
     await generalChannel.send(generalMsg)
 
-   
 @bot.command()
 @commands.has_any_role('Cody', 'Dallas')
 async def update(ctx):
