@@ -148,21 +148,14 @@ class RolesCog(commands.Cog):
         else:
             #Attempt to add users roles
             levDict = {}
+            normalizedRoles = {str(i).lower() : i for i in br}
             for arg in args:
-                # Right here is where the checking would go first
-                arg = arg.lower()
-                #FIXME -- hard coded case conditions are bad code.
-                if arg == "allclass":
-                    role = discord.utils.get(ctx.guild.roles, name="allClass")
-                elif arg == "aluminum":
-                    role = discord.utils.get(ctx.guild.roles, name="Aluminum")
-                elif arg == "announcement":
-                    role = discord.utils.get(ctx.guild.roles, name="Announcement")
-                else:
-                    role = discord.utils.get(ctx.guild.roles, name=arg)
-                if role == None:
+                role = None
+                if arg.lower() not in normalizedRoles:
                     for possible in br:
                         levDict.update({possible.name : Levenshtein.distance(possible.name, arg)})
+                else:
+                    role = normalizedRoles[arg.lower()]
                 if role not in br: #Check if it's an accepted role first
                     r_fail += [arg]
                 else:
@@ -223,16 +216,15 @@ class RolesCog(commands.Cog):
                         pass #Don't care about extraneous roles
         else:
             levDict = {}
+            normalizedRoles = {str(i).lower() : i for i in br}
             for arg in args:
                 # Right here is where the checking would go first
-                arg = arg.lower()
-                if arg == "allclass":
-                    role = discord.utils.get(ctx.guild.roles, name="allClass")
-                else:
-                    role = discord.utils.get(ctx.guild.roles, name=arg)
-                if role == None:
+                role = None
+                if arg.lower() not in normalizedRoles:
                     for possible in member.roles:
                         levDict.update({possible.name : Levenshtein.distance(possible.name, arg)})
+                else:
+                    role = normalizedRoles[arg.lower()]
                 if role not in br: #Check if it's an accepted role first
                     r_fail += [arg]
 
