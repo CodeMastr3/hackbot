@@ -308,7 +308,7 @@ class FunCog(commands.Cog):
     @commands.command(pass_context=True)
     async def catfact(self,ctx):
         catfactsurl=["https://raw.githubusercontent.com/vadimdemedes/cat-facts/master/cat-facts.json"]
-        catfactsBody = requests.get(url=choice(catfacturl))
+        catfactsBody = requests.get(url=choice(catfactsurl))
         if not catfactsBody.ok:
             await ctx.send(f"There seems to be some issues grabbing cat facts right now. So sorry!")
             return
