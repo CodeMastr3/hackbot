@@ -1,7 +1,9 @@
 import aiohttp, urllib.parse
 from discord import Embed
 from discord.ext import commands
-from random import randint, choice
+import random
+import json
+
 
 from requests import request
 
@@ -32,10 +34,6 @@ class FunCog(commands.Cog):
             f"Banned: the server has automatically banned you for saying a bad word.",
             f"{user_mentioned} the game of hide and seek is over, tag, you're banned.",
             
-            #gifs
-            f"https://tenor.com/view/ban-hammer-futurama-scruffy-gif-20750885",
-            f"https://tenor.com/view/ban-hammer-gif-19698183",
-            f"https://tenor.com/view/ban-banpain-yoshi-yoshi-ban-ban-atze-gif-20813985",
         ]
         ban_easter_eggs = [
             f"{user_mentioned} I WARNED YOU ABOUT STAIRS BRO. I TOLD YOU.",
@@ -311,6 +309,25 @@ class FunCog(commands.Cog):
         else:
             em = Embed(title='No page given')
         await ctx.send(embed=em)
+
+
+    #136 different Cat Facts!
+    @commands.command(pass_context=True)
+
+    async def catfact(self,ctx):
+        with open('catfacts.json', 'r') as catfacts_file:
+            catfacts_json = catfacts_file.read()
+
+            CATFACTS_DICT = json.loads(catfacts_json)
+    
+            await ctx.send("Thanks for signing up for Cat Facts! You now will recive fun daily facts about Cats! >o<")
+
+            random_catfact = random.choice(CATFACTS_DICT)
+            await ctx.send(random_catfact)
+        
+
+
+
         
 
 def setup(bot):
