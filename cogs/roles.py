@@ -136,6 +136,7 @@ class RolesCog(commands.Cog):
         r_poss = []
         member = ctx.author
         br = self.bot_roles(ctx)
+        args = [sanitizeInput(i) for i in args]
 
         if "all" in args:
             for role in br:
@@ -206,6 +207,7 @@ class RolesCog(commands.Cog):
         r_poss = []
         member = ctx.author
         br = self.bot_roles(ctx)
+        args = [sanitizeInput(i) for i in args]
         if "all" in args:
             for role in br:
                 if self.has_role(ctx, role):
@@ -298,6 +300,9 @@ class RolesCog(commands.Cog):
                 sent = await ctx.reply("You can't delete that message")
                 await sent.delete(delay=5)
             await message.delete(delay=5)
+
+def sanitizeInput(s):
+    return s.strip().replace('\u200b','').lower()
 
 def setup(bot):
     bot.add_cog(RolesCog(bot))
