@@ -307,6 +307,7 @@ class FunCog(commands.Cog):
 
     @commands.command(pass_context=True)
     async def catfact(self,ctx):
+        """Subscribes to CatFacts!, Returns a random catfact"""
         catfactsurl=["https://raw.githubusercontent.com/vadimdemedes/cat-facts/master/cat-facts.json"]
         catfactsBody = requests.get(url=choice(catfactsurl))
         if not catfactsBody.ok:
@@ -315,6 +316,20 @@ class FunCog(commands.Cog):
         catfacts=json.loads(catfactsBody.text)
         await ctx.send("Thanks for signing up for Cat Facts! You now will recive fun daily facts about Cats! >o<")
         await ctx.send(choice(catfacts))
+
+    @commands.command(pass_context=True)
+    async def fact(self,ctx):
+        """ Returns a random fact! could be true, could be false. Im not the judge of information. 
+        Add to the list! https://github.com/thomasdevine01/hackbot-functions/blob/main/fact.json"""
+        facturl=["https://raw.githubusercontent.com/thomasdevine01/hackbot-functions/main/fact.json"]
+        factsBody = requests.get(url=choice(facturl))
+        if not factsBody.ok:
+            await ctx.send(f"There seems to be some issues grabbing facts right now. So sorry!")
+            return
+        facts=json.loads(factsBody.text)
+        await ctx.send(choice(facts))
+    #shamelessly stolen from mifflin. Do not persecute
+
 
 def setup(bot):
     bot.add_cog(FunCog(bot))
