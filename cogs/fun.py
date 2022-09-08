@@ -307,7 +307,8 @@ class FunCog(commands.Cog):
 
     @commands.command(pass_context=True)
     async def catfact(self,ctx):
-        """Subscribes to CatFacts!, Returns a random catfact"""
+        """Subscribes to CatFacts!, Returns a random catfact.
+        Some of these are questionable"""
         catfactsurl=["https://raw.githubusercontent.com/vadimdemedes/cat-facts/master/cat-facts.json"]
         catfactsBody = requests.get(url=choice(catfactsurl))
         if not catfactsBody.ok:
