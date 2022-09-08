@@ -1,6 +1,5 @@
-# hackbot
 ## Discord bot for Hackathon
-### This bot is a continuing project and I welcome pull requests that improve/fix or add features
+This bot is a continuing project and I welcome pull requests that improve/fix or add features
 
 
 
