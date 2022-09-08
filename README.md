@@ -25,8 +25,12 @@ VENV
 
 ## Creating the Bot
 
-1. Create the discord bot using your account
+1. Create the discord Application using your account
 https://discord.com/developers/applications
+
+2. Create the bot
+
+   /Installation Images/AddBot.png 
 
 2. 
 
