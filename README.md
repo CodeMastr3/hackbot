@@ -62,7 +62,7 @@ https://docs.microsoft.com/en-us/windows/wsl/install
 2. `cd hackbot`
 
 
-### Starting VENV and installing Required Libraries
+### Starting VENV and Installing Required Libraries
 
 1. `python3 -m venv venv`
 
