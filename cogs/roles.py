@@ -136,6 +136,7 @@ class RolesCog(commands.Cog):
         r_poss = []
         member = ctx.author
         br = self.bot_roles(ctx)
+        args = [sanitizeInput(i) for i in args]
 
         if "all" in args:
             for role in br:
@@ -148,21 +149,14 @@ class RolesCog(commands.Cog):
         else:
             #Attempt to add users roles
             levDict = {}
+            normalizedRoles = {str(i).lower() : i for i in br}
             for arg in args:
-                # Right here is where the checking would go first
-                arg = arg.lower()
-                #FIXME -- hard coded case conditions are bad code.
-                if arg == "allclass":
-                    role = discord.utils.get(ctx.guild.roles, name="allClass")
-                elif arg == "aluminum":
-                    role = discord.utils.get(ctx.guild.roles, name="Aluminum")
-                elif arg == "announcement":
-                    role = discord.utils.get(ctx.guild.roles, name="Announcement")
-                else:
-                    role = discord.utils.get(ctx.guild.roles, name=arg)
-                if role == None:
+                role = None
+                if arg.lower() not in normalizedRoles:
                     for possible in br:
                         levDict.update({possible.name : Levenshtein.distance(possible.name, arg)})
+                else:
+                    role = normalizedRoles[arg.lower()]
                 if role not in br: #Check if it's an accepted role first
                     r_fail += [arg]
                 else:
@@ -213,6 +207,7 @@ class RolesCog(commands.Cog):
         r_poss = []
         member = ctx.author
         br = self.bot_roles(ctx)
+        args = [sanitizeInput(i) for i in args]
         if "all" in args:
             for role in br:
                 if self.has_role(ctx, role):
@@ -223,16 +218,15 @@ class RolesCog(commands.Cog):
                         pass #Don't care about extraneous roles
         else:
             levDict = {}
+            normalizedRoles = {str(i).lower() : i for i in br}
             for arg in args:
                 # Right here is where the checking would go first
-                arg = arg.lower()
-                if arg == "allclass":
-                    role = discord.utils.get(ctx.guild.roles, name="allClass")
-                else:
-                    role = discord.utils.get(ctx.guild.roles, name=arg)
-                if role == None:
+                role = None
+                if arg.lower() not in normalizedRoles:
                     for possible in member.roles:
                         levDict.update({possible.name : Levenshtein.distance(possible.name, arg)})
+                else:
+                    role = normalizedRoles[arg.lower()]
                 if role not in br: #Check if it's an accepted role first
                     r_fail += [arg]
 
@@ -306,6 +300,9 @@ class RolesCog(commands.Cog):
                 sent = await ctx.reply("You can't delete that message")
                 await sent.delete(delay=5)
             await message.delete(delay=5)
+
+def sanitizeInput(s):
+    return s.strip().replace('\u200b','').lower()
 
 def setup(bot):
     bot.add_cog(RolesCog(bot))
