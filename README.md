@@ -29,7 +29,7 @@ https://discord.com/developers/applications
 
 2. Create the bot
 
-   ![installation instructions](/Installation Images/AddBot.png) 
+   ![installation instructions](https://github.com/thomasdevine01/hackbot-1/blob/master/Installation%20Images/AddBot.png?raw=true) 
 
 2. 
 
