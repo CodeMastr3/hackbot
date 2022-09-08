@@ -22,18 +22,20 @@ Discord Account
 ## Creating the Bot
 
 More Detailed instructions under: https://discord.com/developers/docs/getting-started
-1.  Create the discord Application using your account
+1.  Create the discord application using your account
 https://discord.com/developers/applications
 
 2.  Create the bot under the BOT tab
    
 3.  Copy your TOKEN and keep it someplace safe, think of the TOKEN as a password for your bot
 
-4.  go to the OAUTH tab, and URL Generator select "Bot" and "Administrator"
+4.  Go to the OAUTH tab, then the URL Generator tab click on the checkboxes labeled "Bot" and "Administrator"
+  
+5.  Click generate link
 
-5.  Copy the URL into your browser
+6.  Copy the URL into your browser
 
-6.  Add the Bot to your server  
+7.  Add the Bot to your server  
 
 
 ## This installation will be done using Linux/WSL
