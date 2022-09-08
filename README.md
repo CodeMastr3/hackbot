@@ -11,10 +11,15 @@
 ## Installation Instructions
 
 Prerequisites:
+
 Linux / WSL
+
 Git 
+
 Python 3
+
 Discord Account
+
 VENV
 
 
