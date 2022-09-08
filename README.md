@@ -19,7 +19,7 @@ Python 3
 
 Discord Account
 
-VENV
+venv
 
 
 ## Creating the Bot
