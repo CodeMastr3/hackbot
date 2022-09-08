@@ -11,15 +11,11 @@ This bot is a continuing project and I welcome pull requests that improve/fix or
 
 Prerequisites:
 
-Linux / WSL
-
 Git 
 
 Python 3
 
 Discord Account
-
-venv
 
 
 ## Creating the Bot
@@ -38,6 +34,8 @@ https://discord.com/developers/applications
 
 6.  Add the Bot to your server  
 
+
+## This installation will be done using Linux/WSL
 
 ## Installing WSL (Windows Users)
 
