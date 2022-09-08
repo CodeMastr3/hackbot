@@ -39,9 +39,6 @@ https://discord.com/developers/applications
 6.  Add the Bot to your server  
 
 
-
-https://discordapp.com/oauth2/authorize?&client_id=[CLIENT ID]&scope=bot
-
 ## Installing WSL (Windows Users)
 
 https://docs.microsoft.com/en-us/windows/wsl/install
