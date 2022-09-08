@@ -80,4 +80,4 @@ https://docs.microsoft.com/en-us/windows/wsl/install
 # Credits and Acknowledgements
 * Feel free to take the code and create your own bot to host.
 * Originally created by AguilarJoel, jameswhowell, and CodeMastr3 on March 7, 2020.
-* Join our Discord server! http://charon.click
+* Join our Discord Server! http://charon.click
