@@ -24,9 +24,9 @@ VENV
 
 ## Creating the Bot
 
+More Detailed instructions under: https://discord.com/developers/docs/getting-started
 1.  Create the discord Application using your account
 https://discord.com/developers/applications
-![installation instructions](https://github.com/thomasdevine01/hackbot-1/blob/master/Installation%20Images/New%20Application.png?raw=true)
 
 2.  Create the bot under the BOT tab
    
@@ -76,5 +76,6 @@ export TOKEN = <INSERT_TOKEN_HERE>
 python3 bot.py
 
 
+#Credits and Acknowledgements
 * Feel free to take the code and create your own bot to host.
 * Originally created by AguilarJoel, jameswhowell, and CodeMastr3 on March 7, 2020.
