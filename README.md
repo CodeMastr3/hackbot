@@ -42,7 +42,7 @@ https://discord.com/developers/applications
 
 https://docs.microsoft.com/en-us/windows/wsl/install
 
-(Pro Tip, make a shortcut to your WSL folder using explorer.exe ~ )
+(Pro Tip, make a shortcut to your WSL folder using `explorer.exe ~ `)
 
 ## Installing VENV
 
