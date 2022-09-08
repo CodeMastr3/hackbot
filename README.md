@@ -24,19 +24,19 @@ VENV
 
 ## Creating the Bot
 
-1. Create the discord Application using your account
+1.  Create the discord Application using your account
 https://discord.com/developers/applications
 ![installation instructions](https://github.com/thomasdevine01/hackbot-1/blob/master/Installation%20Images/New%20Application.png?raw=true)
 
-2. Create the bot
-
-   ![installation instructions](https://github.com/thomasdevine01/hackbot-1/blob/master/Installation%20Images/AddBot.png?raw=true) 
+2.  Create the bot under the BOT tab
    
-3. Copy your TOKEN and keep it someplace safe, think of the TOKEN as a password for your bot
+3.  Copy your TOKEN and keep it someplace safe, think of the TOKEN as a password for your bot
 
-4. go to the OAUTH tab, and URL Generator
+4.  go to the OAUTH tab, and URL Generator select "Bot" and "Administrator"
 
-5. Copy the URL into your browser
+5.  Copy the URL into your browser
+
+6.  Add the Bot to your server  
 
 
 
