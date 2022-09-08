@@ -26,12 +26,21 @@ VENV
 
 1. Create the discord Application using your account
 https://discord.com/developers/applications
+![installation instructions](https://github.com/thomasdevine01/hackbot-1/blob/master/Installation%20Images/New%20Application.png?raw=true)
 
 2. Create the bot
 
    ![installation instructions](https://github.com/thomasdevine01/hackbot-1/blob/master/Installation%20Images/AddBot.png?raw=true) 
+   
+3. Copy your TOKEN and keep it someplace safe, think of the TOKEN as a password for your bot
 
-2. 
+4. go to the OAUTH tab, and URL Generator
+
+5. Copy the URL into your browser
+
+
+
+https://discordapp.com/oauth2/authorize?&client_id=[CLIENT ID]&scope=bot
 
 ## Installing WSL (Windows Users)
 
@@ -68,6 +77,4 @@ python3 bot.py
 
 
 * Feel free to take the code and create your own bot to host.
-* Uses a `.env` file to define the bot token. Syntax is `TOKEN="<discord bot token here>"`.
-    * Place the `.env` file in the same directory as this project.
 * Originally created by AguilarJoel, jameswhowell, and CodeMastr3 on March 7, 2020.
