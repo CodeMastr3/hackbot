@@ -8,7 +8,7 @@
 
 
 
-# Installation Instructions
+## Installation Instructions
 
 Prerequisites:
 Linux / WSL
