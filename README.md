@@ -48,7 +48,7 @@ https://docs.microsoft.com/en-us/windows/wsl/install
 
 ## Installing VENV
 
-`sudo apt install python3-venv`
+   `sudo apt install python3-venv`
 
 ##
 
