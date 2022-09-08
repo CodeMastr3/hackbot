@@ -30,7 +30,7 @@ https://discord.com/developers/applications
 
 2. Create the bot
 
-   /Installation Images/AddBot.png 
+   !/Installation Images/AddBot.png 
 
 2. 
 
