@@ -10,7 +10,7 @@ This bot is a continuing project and I welcome pull requests that improve/fix or
 ## Installation Instructions
 This installation will be using WSL/linux
 
-###Prerequisites:
+### Prerequisites:
 
 Git 
 
