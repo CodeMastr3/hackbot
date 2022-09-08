@@ -57,22 +57,27 @@ https://docs.microsoft.com/en-us/windows/wsl/install
 ## Creating the Directory
 
 `mkdir -p ~/Documents/repos/`
+
 `cd ~/Documents/repos/`
 
 ### Cloning The Github Repo
 `git clone https://github.com/CodeMastr3/hackbot.git`
+
 `cd hackbot`
 
 
 ### Starting VENV and installing Required Libraries
 
 `python3 -m venv venv`
+
 `source venv/bin/activate`
+
 `pip install -r requirements.txt`
 
 ## Setting Token and Starting the Bot
 
 `export TOKEN = <INSERT_TOKEN_HERE> `
+
 `python3 bot.py`
 
 
