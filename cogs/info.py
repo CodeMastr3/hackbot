@@ -212,15 +212,11 @@ class InfoCog(commands.Cog):
         # Mod can be used to change the relative term. Don't have the energy currently to implement
         today_term = datetime.now()
         add_sem = 0
-        if mod % 2 == 1:
-            mod -= 1
-            if today_term.month < 6:
-                add_sem = 6
-            else:
-                add_sem = 4
-        add_year = abs(int(mod/2))
-        coeff = 1 if mod > 0 else -1
-        term = ((today_term.year + add_year) % 2022)*10*coeff + 2222 + add_sem
+        if today_term.month > 6:
+            add_sem = 6
+        else:
+            add_sem = 4
+        term = (today_term.year % 2022)*10 + 2222 + add_sem
         return str(term)
 
     @commands.command()
