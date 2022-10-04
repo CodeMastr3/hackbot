@@ -330,6 +330,12 @@ class FunCog(commands.Cog):
         facts=json.loads(factsBody.text)
         await ctx.send(choice(facts))
     #shamelessly stolen from mifflin. Do not persecute
+    
+    @commands.command(pass_context=True)
+    async def trickortreat(self,ctx):
+        """ Happy Halloween! Returns trick or treat"""  
+        trickOrTreat = choice(["Trick!", "Treat"])
+        await ctx.send(trickOrTreat)
 
 
 def setup(bot):
