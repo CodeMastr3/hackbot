@@ -2,6 +2,7 @@ import aiohttp, urllib.parse
 from discord import Embed
 from discord.ext import commands
 from random import randint, choice
+from datetime import datetime
 import json
 import requests
 
@@ -330,7 +331,20 @@ class FunCog(commands.Cog):
         facts=json.loads(factsBody.text)
         await ctx.send(choice(facts))
     #shamelessly stolen from mifflin. Do not persecute
+    
 
+    @commands.command()
+    async def trickortreat(self,ctx):
+        """ Happy Halloween! Returns trick or treat, only works during spooktober!""" 
+        currentMonth = datetime.now().month
+        if(currentMonth == 10):
+            trickOrTreat = choice(["Trick!", "Treat"])
+            await ctx.send(trickOrTreat)
+
+        else:
+            notOctober = choice(["it is not spooktober, try again later", "try again in october",
+                                 "YOU DARE TRY TO TRICK OR TREAT WHEN IT'S NOT OCTOBER"])
+            await ctx.send(notOctober)
 
 def setup(bot):
     bot.add_cog(FunCog(bot))
