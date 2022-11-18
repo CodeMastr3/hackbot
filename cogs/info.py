@@ -326,6 +326,26 @@ class InfoCog(commands.Cog):
         output_msg += "ᴡᴇ ᴅᴏ ɴᴏᴛ ɢᴜᴀʀᴀɴᴛᴇᴇ ᴛʜᴇ ᴀᴄᴄᴜʀᴀᴄʏ ᴏғ ᴛʜɪs ᴅᴀᴛᴀ"
         channel = payload.channel #await discord.Client.fetch_channel(Cog, payload.channel.id)
         await channel.send(output_msg)
+            @commands.Cog.listener()
+            
+            
+            #due to low enrollment, charon has been reduced to become a walking advertisement ;-(
+    async def on_message(self, message):
+
+        ad_msg_channel = await message.channel.fetch_message(message.id)
+        channel = ad_msg_channel.channel
+        ad_msg = ad_msg_channel.content
+        keywords = ['enroll','enrollment','classes','class','565']
+
+        if(message.author.bot or ad_msg[0] == "!" ):
+            return
+        for index, cases in enumerate(keywords):
+            if cases in ad_msg:
+                five_sixty_five_Ad = choice(["Have you thought about CSCI-565?", "CSCI-565 is looking real nice", "Obviously this means you should Enroll in CSCI-565", "CSCI-565?",
+                                        "Don't care, Enroll in CSCI-565"])
+
+                await message.reply(f'{five_sixty_five_Ad}')
+                break
 
 def setup(bot):
     bot.add_cog(InfoCog(bot))
