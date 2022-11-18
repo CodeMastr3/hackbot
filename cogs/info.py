@@ -330,22 +330,23 @@ class InfoCog(commands.Cog):
             
             
             #due to low enrollment, charon has been reduced to become a walking advertisement ;-(
+    @commands.Cog.listener()
     async def on_message(self, message):
 
         ad_msg_channel = await message.channel.fetch_message(message.id)
         channel = ad_msg_channel.channel
         ad_msg = ad_msg_channel.content
+        msgCount = randint(1, 1000)
         keywords = ['enroll','enrollment','classes','class','565']
 
-        if(message.author.bot or ad_msg[0] == "!" ):
+        if(message.author.bot or ad_msg[0] == "!" or msgCount != 69):
             return
-        for index, cases in enumerate(keywords):
-            if cases in ad_msg:
-                five_sixty_five_Ad = choice(["Have you thought about CSCI-565?", "CSCI-565 is looking real nice", "Obviously this means you should Enroll in CSCI-565", "CSCI-565?",
-                                        "Don't care, Enroll in CSCI-565"])
-
-                await message.reply(f'{five_sixty_five_Ad}')
-                break
+        
+        else:
+            five_sixty_five_Ad = choice(["Have you thought about CSCI-565?", "CSCI-565 is looking real nice", "Obviously this means you should Enroll in CSCI-565", "CSCI-565?",
+                                    "Don't care, Enroll in CSCI-565"])
+            await message.reply(f'{five_sixty_five_Ad}')
+            
 
 def setup(bot):
     bot.add_cog(InfoCog(bot))
