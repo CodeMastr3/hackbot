@@ -140,7 +140,7 @@ class RolesCog(commands.Cog):
 
         if "all" in args:
             for role in br:
-                if not self.has_role(ctx, role):
+                if not self.has_role(ctx, role) and role != "Aluminum":
                     try:
                         await member.add_roles(role)
                         r_success += [role.name]
