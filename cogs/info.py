@@ -150,7 +150,7 @@ class InfoCog(commands.Cog):
 
 
     @commands.command()
-    async def classes(self, ctx, class_name="CSCI-111"):
+    async def schedule(self, ctx, class_name="CSCI-111"):
         """
         Will query CSU Chico's Class schedule to show info about classes. Format: 'CSCI-111' or 'cins_465'
         """
@@ -206,7 +206,7 @@ class InfoCog(commands.Cog):
 
     def get_term(self, mod):
         """
-        Used for the classes command, uses current date to determine the term number to be
+        Used for the schedule command, uses current date to determine the term number to be
         used in parameters
         """
         # Mod can be used to change the relative term. Don't have the energy currently to implement
