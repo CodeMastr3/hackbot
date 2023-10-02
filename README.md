@@ -2,11 +2,6 @@
 This bot is a continuing project and I welcome pull requests that improve/fix or add features
 
 
-
-
-
-
-
 ## Installation Instructions
 This installation will be using WSL/Linux
 
@@ -14,9 +9,11 @@ This installation will be using WSL/Linux
 
 Git 
 
-Python 3
+Python 3.9
 
 Discord Account
+
+Discord Developer Account
 
 
 ## Creating the Bot
@@ -63,10 +60,14 @@ https://docs.microsoft.com/en-us/windows/wsl/install
 
 2. `cd hackbot`
 
+### Using the correct version of python
+
+As Charon was developed in 2020, there are a few notes, the current version of Python will not work. The latest version I can get to work is Python 3.9.0 which can be found [here](https://www.python.org/downloads/release/python-390/).  
+
+Because of this you will need to use `python3.9` when working with your venv and running the bot
 
 ### Starting VENV and Installing Required Libraries
-
-1. `python3 -m venv venv`
+1. `python3.9 -m venv venv`
 
 2. `source venv/bin/activate`
 
@@ -74,9 +75,9 @@ https://docs.microsoft.com/en-us/windows/wsl/install
 
 ## Setting Token and Starting the Bot
 
-1. `export TOKEN = <INSERT_TOKEN_HERE> `
+1. `export TOKEN=<INSERT_TOKEN_HERE>`
 
-2. `python3 bot.py`
+2. `python3.9 bot.py`
 
 
 # Credits and Acknowledgements

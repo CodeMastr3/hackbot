@@ -339,7 +339,22 @@ class FunCog(commands.Cog):
         currentMonth = datetime.now().month
         if(currentMonth == 10):
             trickOrTreat = choice(["Trick!", "Treat"])
+            if trickOrTreat == "Trick!":
+                gifTrickOrTreat = choice([f"https://tenor.com/view/skull-electricity-skeleton-gif-15813803",
+                                          f"https://tenor.com/view/dance-halloween-halloween-dance-trick-or-treat-jack-o-lantern-gif-5003448",
+                                          f"https://tenor.com/view/motocicleta-skeleton-blue-fire-gif-13657514",
+                                          f"https://tenor.com/view/skeleton-unicycle-gif-8512375",
+                                          f"https://tenor.com/view/skeleton-falling-gif-27355771",
+                                          f"https://tenor.com/view/skeleton-skeleton-fall-apart-skeleton-burst-pop-skeleton-exploding-gif-25434496"])
+            elif trickOrTreat == "Treat":
+                gifTrickOrTreat = choice([f"https://tenor.com/view/lots-of-candy-gif-26651307",
+                                          f"https://tenor.com/view/halloween-happy-funny-oprah-winfrey-gif-15441089",
+                                          f"https://tenor.com/view/candy-floss-kid-girl-excited-gif-5963913",
+                                          f"https://tenor.com/view/sml-candy-corn-throwing-throw-halloween-gif-26482738"])
+
             await ctx.send(trickOrTreat)
+            await ctx.send(gifTrickOrTreat)
+
 
         else:
             notOctober = choice(["it is not spooktober, try again later", "try again in october",
