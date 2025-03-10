@@ -328,4 +328,10 @@ if __name__ == '__main__':
     for extension in initial_extensions:
         bot.load_extension(extension)
 
-bot.run(os.getenv('TOKEN'))
+while True:
+    try:
+        bot.run(os.getenv('TOKEN'))
+    except KeyboardInterrupt:
+        sys.exit(1)
+    except:
+        pass
