@@ -168,7 +168,8 @@ class RolesCog(commands.Cog):
                             r_success += [arg]
                         else:
                             r_had += [arg]
-                    except:
+                    except Exception as e:
+		    	print(f"User {member} failed to get {role} because {e}")
                         r_fail += [arg]
             if levDict:
                 for value in sorted(levDict.items(), key=itemgetter(1))[:2]:
