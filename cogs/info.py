@@ -173,10 +173,10 @@ class InfoCog(commands.Cog):
         if class_result.status_code == 200:
             class_dict = class_result.json()
             message += f"Search results for {class_name}:\n"
-            if not bool(class_dict):
+            if not bool(class_dict['classes']):
                 message += "No classes found with that Subject and Catalog Number"
             else:
-                for class_found in class_dict:
+                for class_found in class_dict['classes']:
                     class_msg = ""
                     prof = class_found['instructors'][0]['name']
                     class_msg += f"{class_found['subject']}-{class_found['catalog_nbr']} {class_found['component']} Section {class_found['class_section']}: \t{prof}\n"
