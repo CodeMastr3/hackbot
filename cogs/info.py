@@ -265,7 +265,7 @@ class InfoCog(commands.Cog):
         """
         because of course we need a !prse command
         """
-        await ctx.send("PReSEnting: https://github.com/Asterisk007/prse\n[This programming language is not endorsed by the University, nor this Discord server.]")
+        await ctx.send("[PRSE: It's a language, barely.](https://github.com/Asterisk007/prse)")
 
     # detect stock tickers and display their current price
     @commands.Cog.listener()

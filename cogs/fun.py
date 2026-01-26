@@ -264,8 +264,20 @@ class FunCog(commands.Cog):
                 argIsText = True
 
         if not mock_has_text:
-            prev_message = await channel.history(limit=2).flatten()
-            message_text = prev_message[1].content.lower()
+            if ctx.message.reference != None:
+                prev_message = ctx.message.reference.resolved
+                if prev_message != None:
+                    if prev_message.content != None:
+                        message_text = prev_message.content.lower()
+                    else:
+                        await ctx.message.reply("Sorry, I couldn't get the post you're replying to. Maybe it got deleted? 🤷‍♂️")
+                        return
+                else:
+                    await ctx.message.reply("Sorry, I couldn't get the post you're replying to. Maybe it got deleted? 🤷‍♂️")
+                    return
+            else:
+                prev_message = await channel.history(limit=2).flatten()
+                message_text = prev_message[1].content.lower()
         elif not argIsText:
             message_text = await channel.fetch_message(msg_id)
             message_text = message_text.content.lower()
